@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="netdomain.LinqToNHibernate.Test.BusinessObjects"
+                   assembly="netdomain.LinqToNHibernate.Test">
+
+  <class name="Adresse" table="Adresse" optimistic-lock="version">
+    <id name="Id" column="id" type="Int32" unsaved-value="0">
+      <generator class="identity"/>
+    </id>
+
+    <version name="Version" column="NVersion" type="Timestamp" generated="never" unsaved-value="null"/>
+    <property name="Name" column="Name" length="20" type="string" />
+    <many-to-one name="Person" column="PersonID" foreign-key="FK_Adresse_Person"/>
+  </class>
+</hibernate-mapping>

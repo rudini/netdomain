@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="linqtest" xmlns="http://schemas.microsoft.com/linqtosql/mapping/2007">
+  <Table Name="dbo.Adresse" Member="Adressliste">
+    <Type Name="netdomain.LinqToSql.Test.BusinessObjects.Adresse">
+      <Column Name="Id" Member="Id" Storage="id" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
+      <Column Name="Version" Member="Version" DbType="rowversion NOT NULL" CanBeNull="false" IsDbGenerated="true" IsVersion="true" AutoSync="Always" />
+      <Column Name="Name" Member="Name" Storage="name" DbType="NVarChar(20)" />
+      <Column Name="PersonID" Member="PersonId" Storage="personId" DbType="Int" />
+      <Association Name="FK_Adresse_Person" Member="Person" Storage="person" ThisKey="PersonId" OtherKey="Id" IsForeignKey="true"/>
+    </Type>
+  </Table>
+  <Table Name="dbo.Person" Member="Persons">
+    <Type Name="netdomain.LinqToSql.Test.BusinessObjects.Person">
+      <Column Name="Id" Member="Id" Storage="id" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert"/>
+      <Column Name="Version" Member="Version" DbType="rowversion NOT NULL" CanBeNull="false" IsDbGenerated="true" IsVersion="true" AutoSync="Always"/>
+      <Column Name="Name" Member="Name" Storage="name" DbType="NVarChar(10)" />
+      <Column Name="Beruf" Member="Beruf" Storage="beruf" DbType="NVarChar(20)" />
+      <Association Name="FK_Adresse_Person" Member="Adressliste" Storage="adressliste" ThisKey="Id" OtherKey="PersonId" DeleteRule="Cascade" />
+    </Type>
+  </Table>
+</Database>

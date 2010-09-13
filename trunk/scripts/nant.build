@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<project name="netdomain" default="help" basedir="..">
+  <property name="ProgramFiles" value="${environment::get-variable('ProgramFiles')}"/>
+  <property name="nant.settings.currentframework" value="net-4.0" />
+  <property name="nunit.exe" value="${ProgramFiles}\nunit 2.4.8\bin\nunit-console.exe"/>
+  <property name="msbuild.exe" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" />  
+  <property name="partcover.exe" value="${ProgramFiles}\Gubka Bob\PartCover .NET 2\PartCover.exe" />
+  <property name="MSTest.exe" value="${ProgramFiles}\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe" />
+  <property name="SandcastleBuilderGUI.exe" value="${ProgramFiles}\EWSoftware\Sandcastle Help File Builder\SandcastleBuilderGUI.exe" />
+  <property name="project.name" value="${project::get-name()}" />
+  <property name="project.root" value="${project::get-base-directory()}" />
+  <property name="source.dir" value="${project.root}\source" />
+  <property name="source.sln" value="${project.name}.sln" />
+  <property name="source.vsmdi" value="${project.name}.vsmdi" />
+  <property name="build.config" value="Release" />
+  <property name="build.dir" value="${source.dir}\bin\${build.config}" dynamic="true" />
+  <property name="results.dir" value="${project.root}\results"/>
+  <property name="publish.dir" value="${project.root}\publish"/>
+  <property name="unit_test_exclusions" value="FileSystemTests,Database,CruiseControl,Release" />
+
+  <target name="help" description="Displays the help for the netdomain nant script" >
+    <echo message="This is the nant script for the netdomain project of Marco and Roger of bbv." />
+    <echo message="It contains 5 targets: compile.debug, compile.release, unittest, integrate, create-helpfiles" />
+  </target>
+
+  <target name="-clean" >
+    <echo message="Cleaning the build environment" />
+    <delete dir="${build.dir}" />
+    <delete dir="${results.dir}" />
+  </target>
+
+  <target name="compile.debug" description="Compiles the project in debug mode" >
+    <property name="build.config" value="Debug"/>
+    <call target="-clean"  />
+    <call target="-compile" />
+  </target>
+
+  <target name="compile.release" description="Compiles the project in release mode" >
+    <property name="build.config" value="Release"/>
+    <call target="-clean" />
+    <call target="-compile" />
+  </target>
+
+  <target name="-compile" >
+    <echo message="Compiling in ${build.config} mode" />
+    <echo message="Build.dir = ${build.dir}" />
+	<exec program="${msbuild.exe}">         
+		<arg line="/property:Configuration=${build.config}" />          
+		<arg line='"${source.dir}\${source.sln}"' />          
+		<arg value="/target:Rebuild" />          
+		<arg value="/verbosity:normal" />          
+		<arg value="/nologo" />          
+    </exec>
+    <!--msbuild project="${source.dir}\${source.sln}" target="Rebuild">
+      <property name="Configuration" value="${build.config}" />
+    </msbuild-->
+  </target>
+
+  <target name="-run.msunittest" description="Runs the ms unit tests">
+    <mkdir dir="${results.dir}" unless="${directory::exists(results.dir)}" />
+    <exec program="${MSTest.exe}" failonerror="true">
+      <arg value="/testmetadata:${source.dir}\${source.vsmdi}" />
+      <arg value="/resultsfile:${results.dir}\${project.name}.trx" />
+    </exec>
+  </target>
+
+  <target name="msunittest" description="Creates a html report from msunittest" depends="-run.msunittest">
+    <mkdir dir="${results.dir}" unless="${directory::exists(results.dir)}" />
+    <exec program=".\tools\trx2html\trx2html.exe" failonerror="true">
+      <arg value="${results.dir}\${project.name}.trx" />
+    </exec>
+  </target>
+
+  <target name="unittest" description="Runs the unit tests" depends="-create.nunit">
+    <echo message="Running the unit tests" />
+    <mkdir dir="${results.dir}" />
+    <exec program="${nunit.exe}" workingdir="${source.dir}" commandline="${project.name}.nunit /xml:${results.dir}\${project.name}.nunit.xml" />
+    <nunit2report todir="${results.dir}" format="NoFrames" opendesc="true" >
+      <fileset>
+        <include name="${results.dir}\${project.name}.nunit.xml" />
+      </fileset>
+    </nunit2report>
+  </target>
+
+  <target name="-create.nunit" >
+    <echo message="Creating the nunit project file" />
+    <bbv.nunitproject project="${source.dir}\${project.name}.nunit" appBase=".">
+      <fileset basedir="${build.dir}">
+        <include name="**/*Test.dll" />
+      </fileset>
+    </bbv.nunitproject>
+  </target>
+
+  <target name="integrate" description="Compiles in Release mode and runs the unittests">
+    <call target="compile.release" />
+    <call  target="msunittest" />
+  </target>
+
+  <target name="coverage-build"
+          description="build a version for coverage testing.">
+    <property name="configuration" value="Release" />
+    <call target="compile.release" />
+    <call target="coverage" />
+  </target>
+
+  <target name="create.helpfiles" description="generates the help files of the project">
+    <foreach item="File" property="filename">
+      <in>
+        <items basedir="${source.dir}">
+          <include name="**/*.shfbproj" />
+        </items>
+      </in>
+      <do>
+        <echo message="${filename}"/>
+    	<msbuild project="${filename}">
+      		<property name="Configuration" value="${build.config}" />
+    	</msbuild>
+        <!--exec program="${SandcastleBuilderGUI.exe}">
+          <arg file="${filename}" />
+        </exec-->
+      </do>
+    </foreach>
+  </target>
+
+  <target name="coverage" description="compute coverage statistics for all unit tests defined in this project" depends="-create.nunit">
+    <property name="date" value="${datetime::now()}" />
+    <property name="acceptable" value="80" />
+    <mkdir dir="${results.dir}" unless="${directory::exists(results.dir)}" />
+    <exec program="${partcover.exe}" failonerror="true">
+      <arg value="--target" />
+      <arg value="${MSTest.exe}" />
+      <arg value="--target-work-dir" />
+      <arg value="${source.dir}" />
+      <arg value="--target-args" />
+      <arg value="/testmetadata:${project.name}.vsmdi /noisolation" />
+      <arg value="--include" />
+      <arg value="[netdomain.*]*" />
+      <arg value="--exclude" />
+      <arg value="[*Test*]*" />
+      <arg value="--output" />
+      <arg value="${results.dir}/${project.name}.coverage.xml" />
+    </exec>
+    <style style=".\tools\Xslt\PartCover-NCover-Like.report.xslt" in="${results.dir}/${project.name}.coverage.xml" out="${results.dir}/coverage-report.html">
+      <parameters>
+        <parameter name="DateTime" namespaceuri="" value="${date}" />
+        <parameter name="ProjectName" namespaceuri="" value="${project.name}" />
+        <parameter name="Acceptable" namespaceuri="" value="${acceptable}" />
+      </parameters>
+    </style>
+    <!-- This generates the extension data which is needed for cruise control, the attribute "in" is just used for validation reason -->
+    <!--<style style=".\tools\Xslt\PartCover-Extension.xslt" in="${results.dir}/${project.name}.coverage.xml" out="${results.dir}/${project.name}.coverage.ext.xml">
+      <parameters>
+        <parameter name="DateTime" namespaceuri="" value="${date}" />
+        <parameter name="ProjectName" namespaceuri="" value="${project.name}" />
+        <parameter name="Acceptable" namespaceuri="" value="${acceptable}" />
+      </parameters>
+    </style>-->
+  </target>
+
+  <target name="publish" description="copies the published build to the publish server">
+    <delete dir="${publish.dir}" />
+    <mkdir dir="${publish.dir}" />
+    <copy todir="${publish.dir}">
+      <fileset basedir="${build.dir}">
+        <include name="*.dll" />
+        <include name="*.exe" />
+        <exclude name="nunit*" />
+        <exclude name="*.Test*" />
+      </fileset>
+    </copy>
+  </target>
+</project>
