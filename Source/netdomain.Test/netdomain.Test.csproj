@@ -59,8 +59,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Moq, Version=4.0.10501.6, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL" />
-    <Reference Include="NMock2, Version=2.0.0.21893, Culture=neutral, PublicKeyToken=cf53a760d95f4c33, processorArchitecture=MSIL" />
+    <Reference Include="Moq, Version=4.0.10501.6, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalLibs\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NMock2, Version=2.0.0.21893, Culture=neutral, PublicKeyToken=cf53a760d95f4c33, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalLibs\NMock2.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
