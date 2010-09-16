@@ -76,7 +76,7 @@ namespace netdomain.LinqToObjects
         /// Gets the connection manager.
         /// </summary>
         /// <value>The connection manager.</value>
-        public IConnectionManager ConnectionManager
+        public virtual IConnectionManager ConnectionManager
         {
             get { throw new NotSupportedException("Connection property is not supported by the InMemoryUnitOfWork"); }
         }
