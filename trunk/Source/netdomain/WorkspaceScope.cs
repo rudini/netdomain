@@ -42,7 +42,7 @@ namespace netdomain
         /// A stack to arrange workspaces between scopes. 
         /// </summary>
         [ThreadStatic]
-        private static Stack<IWorkspace> workspaceStack;
+        private static Stack<Tuple<IWorkspace, Type>> workspaceStack;
 
         /// <summary>
         /// A flag to find out wheter the scope is already disposed.
@@ -99,15 +99,15 @@ namespace netdomain
         public WorkspaceScope(IWorkspace workspaceToUse)
         {
             this.CurrentWorkspace = workspaceToUse;
-            WorkspaceStack.Push(this.CurrentWorkspace);
+            WorkspaceStack.Push(new Tuple<IWorkspace, Type>(this.CurrentWorkspace, null));
         }
 
         /// <summary>
         /// Gets a stack to arrange workspaces between scopes. 
         /// </summary>
-        public static Stack<IWorkspace> WorkspaceStack
+        public static Stack<Tuple<IWorkspace, Type>> WorkspaceStack
         {
-            get { return workspaceStack ?? (workspaceStack = new Stack<IWorkspace>()); }
+            get { return workspaceStack ?? (workspaceStack = new Stack<Tuple<IWorkspace, Type>>()); }
         }
 
         /// <summary>
@@ -139,13 +139,13 @@ namespace netdomain
         {
             if (!this.disposed)
             {
-                if (this.CurrentWorkspace != WorkspaceStack.Pop())
+                if (this.CurrentWorkspace != WorkspaceStack.Pop().Item1)
                 {
                     throw new InvalidOperationException(
                         "The current workspace must be the same as the workspace on top of the stack.");
                 }
 
-                if (workspaceStack.Count == 0 || (this.CurrentWorkspace != WorkspaceStack.Peek()))
+                if (workspaceStack.Count == 0 || (this.CurrentWorkspace != WorkspaceStack.Peek().Item1))
                 {
                     lock (lockObject)
                     {
@@ -164,7 +164,7 @@ namespace netdomain
         /// <param name="requiresNew">if set to <c>true</c> [requires new].</param>
         private void SetCurrentWorkspace(bool requiresNew)
         {
-            if (WorkspaceStack.Count == 0 || requiresNew)
+            if (WorkspaceStack.Count == 0 || requiresNew || this.workspaceType != WorkspaceStack.Peek().Item2)
             {
                 lock (lockObject)
                 {
@@ -176,10 +176,10 @@ namespace netdomain
             }
             else
             {
-                this.CurrentWorkspace = WorkspaceStack.Peek();
+                this.CurrentWorkspace = WorkspaceStack.Peek().Item1;
             }
 
-            WorkspaceStack.Push(this.CurrentWorkspace);
+            WorkspaceStack.Push(new Tuple<IWorkspace, Type>(this.CurrentWorkspace, this.workspaceType));
         }
     }
 }
