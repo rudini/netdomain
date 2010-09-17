@@ -216,6 +216,29 @@ namespace netdomain
 
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
+
+        [TestMethod]
+        public void NestedWorkspaceScopesWithRequiredWorkspaceOptionAsTypedWorkspace()
+        {
+            var workspaceFactoryMock = this.RegisterWorkspaceFactory();
+            var outerWorkspace = new Mock<IWorkspace>();
+            var innerWorkspace = new Mock<IWorkspace>();
+            workspaceFactoryMock.Setup(factory => factory.GetWorkspaceInstance(typeof(MyWorkspace))).Returns(outerWorkspace.Object);
+            workspaceFactoryMock.Setup(factory => factory.GetWorkspaceInstance(typeof(MyDifferentWorkspace))).Returns(innerWorkspace.Object);
+
+            using (var outerScope = new WorkspaceScope(typeof(MyWorkspace), WorkspaceScopeOption.RequiresNew))
+            {
+                using (var innerScope = new WorkspaceScope(typeof(MyDifferentWorkspace)))
+                {
+                    Assert.AreNotEqual(
+                        outerScope.CurrentWorkspace,
+                        innerScope.CurrentWorkspace,
+                        "The inner workspace must not be the same instance like the outer workspace.");
+                }
+            }
+
+            WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
+        }
         
         private Mock<IWorkspaceFactory> RegisterWorkspaceFactory()
         {
@@ -224,4 +247,7 @@ namespace netdomain
             return workspaceFactoryMock;
         }
     }
+
+    internal class MyWorkspace { }
+    internal class MyDifferentWorkspace { }
 }
