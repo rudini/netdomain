@@ -20,6 +20,7 @@
 namespace netdomain
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq.Expressions;
@@ -69,7 +70,11 @@ namespace netdomain
             IDbCommand command = PrepareCommand(manager.Connection, procedure, parameters);
 
             Delegate del;
-            delegateCache.TryGetValue(typeof(TResult), out del);
+
+            lock (((ICollection)delegateCache).SyncRoot)
+            {
+                delegateCache.TryGetValue(typeof (TResult), out del);
+            }
 
             var connected = ManageConnection(manager);
             IDataReader reader = command.ExecuteReader();
@@ -104,7 +109,10 @@ namespace netdomain
                         memberBindings);
 
                     del = Expression.Lambda(memberInitExpression, parms).Compile();
-                    delegateCache[typeof(TResult)] = del;
+                    lock (((ICollection)delegateCache).SyncRoot)
+                    {
+                        delegateCache.Add(typeof(TResult), del);
+                    }
                 }
 
                 reader.GetValues(values);
