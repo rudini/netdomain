@@ -1,6 +1,6 @@
 #summary Describes the workspace pattern.
 
-= Introduction =
+= The Workspace pattern =
 
 The IWorkspace is an abstraction of the used persistence framework and an implementation of the Unit of Work pattern.
 The concept is to let your Repositories (see Repositories page) only talk to the Workspace abstraction, making it possible:
