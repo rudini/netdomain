@@ -26,3 +26,21 @@ IWorkspace ws = new LinqToEntitiesWorkspace(new MyObjectContext());
 IWorkspace<ObjectContext> typedWs = IWorkspace<ObjectContext>() ws;
 ObjectContext ctx = typedWs.WrappedInstance;
 }}}
+
+
+= The WorkspaceScope =
+
+When it comes to refactoring of duplicated code, the problem is often how to pass the current Workspace to a method used by many consumers.
+
+The simplest way to do that is as follows:
+
+{{{
+public Customer GetCustomer(int id)
+{
+  using (var scope = new WorkspaceScope(WorkspaceScopeOption.Required))
+  {
+    return scope.CurrentWorkspace.CreateQuery<Customer>().Where(c => c.Id == id);
+  }
+}
+}}}
+
