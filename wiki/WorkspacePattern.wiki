@@ -18,3 +18,11 @@ using (IWorkspace ws = new LinqToEntitiesWorkspace(ctx))
   ws.SubmitChanges();
 }
 }}}
+
+To access the underlying persistence framework you can use the generic IWorkspace interface e.g.
+
+{{{
+IWorkspace ws = new LinqToEntitiesWorkspace(new MyObjectContext());
+IWorkspace<ObjectContext> typedWs = IWorkspace<ObjectContext>() ws;
+ObjectContext ctx = typedWs.WrappedInstance;
+}}}
