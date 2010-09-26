@@ -1,0 +1,22 @@
+#summary Describes how to apply DDD Patterns.
+
+= DDD Patterns =
+
+Add your content here.
+
+= Repository pattern =
+
+The concept is to let your Repositories only talk to the Workspace abstraction. For common repository functions, a base class is implemented.
+
+The following sample shows, how to create a Repository class in your code.
+Your class must only derive from the Repository base class of a specific type (the aggregate root type).
+The Repository gets the IWorkspace by its constructor.
+
+{{{
+public class PersonRepository : Repository<Person>
+{
+    public PersonRepository(IWorkspace context)
+        : base(context)
+    { }
+}
+}}}
