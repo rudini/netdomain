@@ -47,3 +47,5 @@ public Customer GetCustomer(int id)
 || *WorkspaceOption* || *Description* ||
 || Required || A workspace is required by the scope. It uses an ambient workspace if one already exists. <br/> Otherwise, it creates a new workspace before entering the scope. This is the default value. ||
 || RequiresNew ||  A new workspace is always created for the scope. <br/> This is usefull if you don't want to cache the result of the query in your id map / tracking manager ||
+
+|| The WorkspaceScope provides different constructor overloads. For more information see the API documentation. ||
