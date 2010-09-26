@@ -50,7 +50,7 @@ public Customer GetCustomer(int id)
 
 || The WorkspaceScope provides different constructor overloads. For more information see the API documentation. ||
 
-To use the WorkspaceScope, first you must register a WorkspaceFactory.
+To use the WorkspaceScope, you have to register a WorkspaceFactory before.
 You can do that in the following ways:
 
 {{{
