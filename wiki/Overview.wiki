@@ -12,9 +12,9 @@ The main features of netdomain are:
   * Enhances missing functionalities to LINQ to SQL and Entity Framework
   * Supports high performance mass data update processing
 
-= Details =
+= Simplifies the using of persistence frameworks (ORM) =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+The business logic just works against an interfaced called IWorkspace for fetching, deleting and updating entities. LINQ is the common language for querying data.
+The persistence framework you use doesn't matter any longer.
+
+https://netdomain.googlecode.com/svn/wiki/Overview.png
