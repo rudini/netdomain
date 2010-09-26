@@ -28,8 +28,9 @@ public class PersonRepository : Repository<Person>
   * Used by the Repository to query for objects.
 
 {{{
-var personWithNameEqualsJohn = new Specification<Person>(p => p.Name == "John");
-var personWithNameEqualsJohnAndProfessionEqualsEngineer = new Specification<Person>(p => p.Profession == "Engineer");
-var spec = specification.And(personWithNameEqualsJohnAndProfessionEqualsEngineer);
+var specification = new Specification<Person>(p => p.Name == name);
+var andSpecification = new Specification<Person>(p => p.Beruf == beruf);
+var spec = specification.And(andSpecification);
 IEnumerable<Person> person = repository.FindBySpecification(spec);
+
 }}}
