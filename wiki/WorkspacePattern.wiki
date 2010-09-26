@@ -49,3 +49,16 @@ public Customer GetCustomer(int id)
 || RequiresNew ||  A new workspace is always created for the scope. <br/> This is usefull if you don't want to cache the result of the query in your id map / tracking manager ||
 
 || The WorkspaceScope provides different constructor overloads. For more information see the API documentation. ||
+
+To use the WorkspaceScope, first you must register a WorkspaceFactory.
+You can do that in the following ways:
+
+{{{
+// registers a workspace factory as an instance ! Not thread safe
+WorkspaceBuilder.Current.RegisterDefaultWorkspaceFactory(workspaceFactoryMock.Object);
+}}}
+
+{{{
+// registers a workspace factory by a type.
+WorkspaceBuilder.Current.RegisterDefaultWorkspaceFactory<MyWorkspaceFactory>();
+}}}
