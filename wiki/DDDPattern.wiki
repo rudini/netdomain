@@ -10,7 +10,7 @@ The concept is to let your Repositories only talk to the Workspace abstraction. 
 
 The following sample shows, how to create a Repository class in your code.
 Your class must only derive from the Repository base class of a specific type (the aggregate root type).
-The Repository gets the IWorkspace by its constructor.
+The Repository gets the IWorkspace in its constructor.
 
 {{{
 public class PersonRepository : Repository<Person>
