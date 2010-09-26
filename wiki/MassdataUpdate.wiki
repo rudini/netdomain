@@ -2,8 +2,8 @@
 
 = Mass data update processing =
 
-The .Net Framework does contains a class named SqlBulkInsert to update data very fast.
-netdomain provide you an extension method, that enhances the SqlBulkInsert class  to use a IEnumberable as the data to store to a database.
+The .Net Framework does contains a class named SqlBulkCopy to update data very fast.
+netdomain provide you an extension method, that enhances the SqlBulkCopy class  to use a IEnumberable as the data to store to a database.
 
 The usage is very straightforward:
 
