@@ -6,3 +6,15 @@ The IWorkspace is an abstraction of the used persistence framework and an implem
 The concept is to let your Repositories (see Repositories page) only talk to the Workspace abstraction, making it possible:
   * To swap the underlying persistence framework.
   * To use the persistence framework in a unified way.
+
+Here's a code sample of a small unit of work implementation:
+
+{{{
+using (ObjectContext ctx = new MyObjectContext())
+using (IWorkspace ws = new LinqToEntitiesWorkspace(ctx))
+{
+  var person = ws.CreateQuery<Person>().Where(p => p.Id == id).Single();
+  person.Name = "changedName";
+  ws.SubmitChanges();
+}
+}}}
