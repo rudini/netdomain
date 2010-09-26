@@ -2,7 +2,7 @@
 
 = DDD Patterns =
 
-Add your content here.
+This page does not provide the theory behind DDD patterns but rather how to implement such patterns using the netdomain framework.
 
 = Repository pattern =
 
@@ -19,4 +19,17 @@ public class PersonRepository : Repository<Person>
         : base(context)
     { }
 }
+}}}
+
+= Specifications =
+
+  * Encapsulates the criteria in a Specification instance used as a variant of the query object pattern or for business rules implementation
+  * The criterion could use another query (AND, OR) or can be negated (NOT)
+  * Used by the Repository to query for objects.
+
+{{{
+var personWithNameEqualsJohn = new Specification<Person>(p => p.Name == "John");
+var personWithNameEqualsJohnAndProfessionEqualsEngineer = new Specification<Person>(p => p.Profession == "Engineer");
+var spec = specification.And(personWithNameEqualsJohnAndProfessionEqualsEngineer);
+IEnumerable<Person> person = repository.FindBySpecification(spec);
 }}}
