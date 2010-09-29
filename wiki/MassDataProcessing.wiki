@@ -5,7 +5,7 @@
 The .Net Framework contains a class named SqlBulkCopy to insert data very fast.
 netdomain provide you an extension method, that enhances the SqlBulkCopy class  to use a IEnumberable as the data to store to a database.
 
-The usage is very straightforward:
+The usage is straightforward:
 
 {{{ 
 using netdomain;
