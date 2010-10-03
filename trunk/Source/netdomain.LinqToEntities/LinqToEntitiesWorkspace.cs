@@ -409,11 +409,7 @@ namespace netdomain.LinqToEntities
         {
             if (e.Action == System.ComponentModel.CollectionChangeAction.Add)
             {
-                var entity = e.Element as EntityObject;
-                if (entity != null && entity.EntityState == EntityState.Added)
-                {
-                    this.GenerateId(entity);
-                }
+                this.GenerateId(e.Element);
             }
         }
     }
