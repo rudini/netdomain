@@ -24,8 +24,6 @@ namespace netdomain.LinqToEntities.Test.BusinessObjects
 
     public partial class PersonPoco : IValidatable<ValidationResult>
     {
-        private static readonly IValidationEngine<ValidationResult> validationEngine;
-
         /// <summary>
         /// Validates this instance and all aggregated entities and returns the validation results.
         /// </summary>
