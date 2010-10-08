@@ -19,6 +19,8 @@
 namespace netdomain.Workspace
 {
     using Abstract;
+
+    using netdomain.Helpers;
     using netdomain.IdGenerator;
 
     /// <summary>
@@ -37,10 +39,15 @@ namespace netdomain.Workspace
             var t = entity.GetType();
             foreach (IdentifierGeneratorAttribute attr in t.GetCustomAttributes(typeof(IdentifierGeneratorAttribute), true))
             {
-                var idgen = IdentifierGeneratorFactory.Instance.Create(attr.GeneratorType);
-                var id = idgen.Generate(workspace, entity);
+                var current = t.GetProperty(attr.Propertyname).GetValue(entity, null);
+                var defaultValue = TypeHelper.GetDefault(current.GetType());
 
-                t.GetProperty(attr.Propertyname).SetValue(entity, id, null);
+                if (defaultValue.Equals(current))
+                {
+                    var idgen = IdentifierGeneratorFactory.Instance.Create(attr.GeneratorType);
+                    var id = idgen.Generate(workspace, entity);
+                    t.GetProperty(attr.Propertyname).SetValue(entity, id, null);
+                }
             }
         }
     }

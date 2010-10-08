@@ -95,12 +95,12 @@
     <Compile Include="DataReaderWrapper.cs" />
     <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="DbConnectionExtension.cs" />
+    <Compile Include="Helpers\TypeHelper.cs" />
     <Compile Include="IdGenerator\GuidCombGenerator.cs" />
     <Compile Include="IdGenerator\GuidGenerator.cs" />
     <Compile Include="IdGenerator\IdentifierGenerationException.cs" />
     <Compile Include="IdGenerator\IdentifierGeneratorFactory.cs" />
     <Compile Include="IdGenerator\IdentifierGeneratorAttribute.cs" />
-    <Compile Include="WorkspaceExtensions\IdGeneratorExtension.cs" />
     <Compile Include="IdGenerator\IIdentifierGenerator.cs" />
     <Compile Include="Helpers\MappingHelper.cs" />
     <Compile Include="IdGenerator\IIdentifierGeneratorFactory.cs" />

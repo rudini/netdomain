@@ -113,10 +113,6 @@
       <Project>{35C4C7E5-3C3E-4FE0-818E-C77718FC1B2A}</Project>
       <Name>netdomain.Abstract</Name>
     </ProjectReference>
-    <ProjectReference Include="..\netdomain.Test\netdomain.Test.csproj">
-      <Project>{E8DD9308-C979-434D-901D-1F00419AD3D3}</Project>
-      <Name>netdomain.Test</Name>
-    </ProjectReference>
     <ProjectReference Include="..\netdomain\netdomain.csproj">
       <Project>{7BF69BCF-68C3-4311-A9E8-1D0F99031F36}</Project>
       <Name>netdomain</Name>
@@ -128,10 +124,6 @@
     <ProjectReference Include="..\netdomain.LinqToEntities\netdomain.LinqToEntities.csproj">
       <Project>{008AD56E-961F-4030-A8B5-E5256538FEEF}</Project>
       <Name>netdomain.LinqToEntities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\netdomain.LinqToSql\netdomain.LinqToSql.csproj">
-      <Project>{76CAD66C-E769-49A1-A27E-2F842171725F}</Project>
-      <Name>netdomain.LinqToSql</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
