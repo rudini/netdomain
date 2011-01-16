@@ -103,18 +103,18 @@ namespace netdomain
         }
 
         /// <summary>
-        /// Gets a stack to arrange workspaces between scopes. 
-        /// </summary>
-        public static Stack<IWorkspace> WorkspaceStack
-        {
-            get { return workspaceStack ?? (workspaceStack = new Stack<IWorkspace>()); }
-        }
-
-        /// <summary>
         /// Gets the current workspace.
         /// </summary>
         /// <value>The current workspace.</value>
         public IWorkspace CurrentWorkspace { get; private set; }
+
+        /// <summary>
+        /// Gets a stack to arrange workspaces between scopes. 
+        /// </summary>
+        private static Stack<IWorkspace> WorkspaceStack
+        {
+            get { return workspaceStack ?? (workspaceStack = new Stack<IWorkspace>()); }
+        }
 
         /// <summary>
         /// Submits the changes.
