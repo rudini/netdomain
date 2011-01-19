@@ -78,6 +78,8 @@ To mock the calls on a DataContext you have to simply mock the {{{IWorkspace<Dat
     this.workspaceMock.Setup(wsm => wsm.CreateQuery<JobData>()).Returns(
          this.inMemoryWorkspace.CreateQuery<JobData>);
     var testee = new JobArchiveQueryService(this.workspaceMock.Object);
+    
+    // adding testdata to workspace omitted
 
     // Act
     var result = this.testee.GetArchivedJobs();
