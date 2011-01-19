@@ -1,8 +1,9 @@
 = Enable and simplifies TDD  =
 
+For unit testing purposes, it’s not necessary to test the underlying persistence framework. We just want to test the repository. So you just have to mock the IWorkspace.
+
 == Using the InMemoryQueryableContext ==
 
-For unit testing purposes, it’s not necessary to test the underlying persistence framework. We just want to test the repository. So you just have to mock the IWorkspace.
 To simulate persistent data, you can add Entities to an InMemoryQueryableContext as you can see in the following code snippet (NMock2).
 
 {{{
@@ -50,5 +51,7 @@ public void GetBySpecification()
     Assert.AreEqual(medium, fetchedMedium);
 }
 }}}
+
+
 
 || Remark: Not all LINQ Queries are supported by all persistence Frameworks. ||
