@@ -1,5 +1,6 @@
-
 = Enable and simplifies TDD  =
+
+== Using the InMemoryQueryable Context ==
 
 For unit testing purposes, it’s not necessary to test the underlying persistence framework. We just want to test the repository. So you just have to mock the IWorkspace.
 To simulate persistent data, you can add Entities to an InMemoryQueryableContext as you can see in the following code snippet (NMock2).
