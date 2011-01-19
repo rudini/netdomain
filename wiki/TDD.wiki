@@ -34,7 +34,7 @@ public void GetBySpecification()
 
 == Using the InMemoryWorkspace ==
 
-The InMemoryWorkspace can be used as a replacement of a real persistence framework workspace. Because the data is hold in memory, there is neither support for transactions nor can data rolled back (this is the case when no SubmitChanges() is called).
+The InMemoryWorkspace can be used as a replacement of a real persistence framework workspace. Because the data is hold in memory, there is neither support for transactions nor can you can rollback changed data (this is the case when no SubmitChanges() is called).
 
 {{{
 [TestMethod]
