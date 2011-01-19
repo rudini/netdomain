@@ -68,7 +68,7 @@ There are situations in which you want to call methods on the wrapped instance e
     }
 }}}
 
-To mock the calls on a DataContext you have to simply mock the IWorkspace<DataContext>.
+To mock the calls on a DataContext you have to simply mock the {{{IWorkspace<DataContext>}}}.
 
 {{{
     // Arrange
