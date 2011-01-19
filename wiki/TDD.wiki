@@ -56,7 +56,7 @@ public void GetBySpecification()
 
 There are situations in which you want to call methods on the wrapped instance e.g. 
 
-{{
+{{{
     /// <summary>
     /// Initializes a new instance of the <see cref="JobArchiveQueryService"/> class.
     /// </summary>
@@ -66,11 +66,11 @@ There are situations in which you want to call methods on the wrapped instance e
         this.workspace = workspace;
         ((IWorkspace<DataContext>)this.workspace).WrappedInstance.ObjectTrackingEnabled = false;
     }
-}}
+}}}
 
 To mock the calls on a DataContext you have to simply mock the IWorkspace<DataContext>.
 
-{{
+{{{
     // Arrange
     var inMemoryWorkspace = new InMemoryWorkspace();
     var workspaceMock = new Mock<IWorkspace<DataContext>>();
@@ -85,6 +85,6 @@ To mock the calls on a DataContext you have to simply mock the IWorkspace<DataCo
     // Assert
     Assert.AreEqual(1, result.RowCount, "The row count must be {0}", 1);
     Assert.AreEqual("Testname1", result.Results[0].Jobname, "The name of the job must be {0}", "Testname1");
-}}
+}}}
 
 || Remark: Not all LINQ Queries are supported by all persistence Frameworks. ||
