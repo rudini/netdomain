@@ -10,6 +10,7 @@ To simulate persistent data, you can add Entities to an InMemoryQueryableContext
 [TestMethod]
 public void GetBySpecification()
 {
+    // Arrange
     var workspace = Mockery.NewMock<IWorkspace>();
     var testee = new MediumRepository(workspace);
     
@@ -22,21 +23,24 @@ public void GetBySpecification()
     queryableType.Insert(medium);
 
     Expect.Once.On(workspace).Method("CreateQuery", typeof(Medium)).Will(Return.Value(queryableType));
-            
+    
+    // Act        
     var fetchedMedium = testee.FindBySpecification(spec).First();
 
+    // Assert
     Assert.AreEqual(medium, fetchedMedium);
-
-    this.mockery.VerifyAllExpectationsHaveBeenMet();
 }
 }}}
 
 == Using the InMemoryWorkspace ==
 
+The InMemoryWorkspace can be used as a replacement of a real persistence framework workspace. Because the data is hold in memory, there is neither suport for transactions nor can data rolled back (this is the case when no SubmitChanges() is called).
+
 {{{
 [TestMethod]
 public void GetBySpecification()
 {
+    // Arrange
     var workspace = new InMemoryWorkspace>();
     var testee = new MediumRepository(workspace);
     
@@ -45,9 +49,12 @@ public void GetBySpecification()
 
     var medium = new Medium { Title = title };
     workspace.Add(medium);
-         
+    workspace.SubmitChanges();
+    
+    // Act
     var fetchedMedium = testee.FindBySpecification(spec).First();
 
+    // Assert
     Assert.AreEqual(medium, fetchedMedium);
 }
 }}}
