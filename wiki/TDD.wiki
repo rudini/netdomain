@@ -30,9 +30,6 @@ public void GetBySpecification()
 }
 }}}
 
-|| Remark: Not all LINQ Queries are supported by all persistence Frameworks. ||
-
-
 == Using the InMemoryWorkspace ==
 
 {{{
@@ -53,3 +50,5 @@ public void GetBySpecification()
     Assert.AreEqual(medium, fetchedMedium);
 }
 }}}
+
+|| Remark: Not all LINQ Queries are supported by all persistence Frameworks. ||
