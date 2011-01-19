@@ -64,8 +64,8 @@ There are situations in which you want to call methods on the wrapped instance e
     public JobArchiveQueryService(IWorkspace workspace)
     {
         this.workspace = workspace;
-        ((IWorkspace<DataContext>)this.workspace).WrappedInstance.ObjectTrackingEnabled = false;
-    }
+        *((IWorkspace<DataContext>)this.workspace).WrappedInstance.ObjectTrackingEnabled = false;*
+}
 }}}
 
 To mock the calls on a DataContext you have to simply mock the {{{IWorkspace<DataContext>}}}.
