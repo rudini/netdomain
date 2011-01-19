@@ -64,7 +64,7 @@ There are situations in which you want to call methods on the wrapped instance e
     public JobArchiveQueryService(IWorkspace workspace)
     {
         this.workspace = workspace;
-        *((IWorkspace<DataContext>)this.workspace).WrappedInstance.ObjectTrackingEnabled = false;*
+        `*`((IWorkspace<DataContext>)this.workspace).WrappedInstance.ObjectTrackingEnabled = false;`*`
 }
 }}}
 
