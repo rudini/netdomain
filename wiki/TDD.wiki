@@ -1,6 +1,6 @@
 = Enable and simplifies TDD  =
 
-== Using the InMemoryQueryableContext<T> ==
+== Using the InMemoryQueryableContext ==
 
 For unit testing purposes, it’s not necessary to test the underlying persistence framework. We just want to test the repository. So you just have to mock the IWorkspace.
 To simulate persistent data, you can add Entities to an InMemoryQueryableContext as you can see in the following code snippet (NMock2).
@@ -9,6 +9,9 @@ To simulate persistent data, you can add Entities to an InMemoryQueryableContext
 [TestMethod]
 public void GetBySpecification()
 {
+    var workspace = Mockery.NewMock<IWorkspace>();
+    var testee = new MediumRepository(workspace);
+    
     var title = "Testtitle";
     var spec = new Specification<Medium>(m => m.Title == title);
 
@@ -17,9 +20,9 @@ public void GetBySpecification()
     InMemoryQueryableContext<Medium> queryableType = new InMemoryQueryableContext<Medium>();
     queryableType.Insert(medium);
 
-    Expect.Once.On(this.workspace).Method("CreateQuery",  typeof(Medium)).Will(Return.Value(queryableType));
+    Expect.Once.On(workspace).Method("CreateQuery", typeof(Medium)).Will(Return.Value(queryableType));
             
-    var fetchedMedium = this.testee.FindBySpecification(spec).First();
+    var fetchedMedium = testee.FindBySpecification(spec).First();
 
     Assert.AreEqual(medium, fetchedMedium);
 
@@ -28,3 +31,25 @@ public void GetBySpecification()
 }}}
 
 || Remark: Not all LINQ Queries are supported by all persistence Frameworks. ||
+
+
+== Using the InMemoryWorkspace ==
+
+{{{
+[TestMethod]
+public void GetBySpecification()
+{
+    var workspace = new InMemoryWorkspace>();
+    var testee = new MediumRepository(workspace);
+    
+    var title = "Testtitle";
+    var spec = new Specification<Medium>(m => m.Title == title);
+
+    var medium = new Medium { Title = title };
+    workspace.Add(medium);
+         
+    var fetchedMedium = testee.FindBySpecification(spec).First();
+
+    Assert.AreEqual(medium, fetchedMedium);
+}
+}}}
