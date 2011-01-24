@@ -509,7 +509,11 @@ namespace netdomain.LinqToNHibernate.Test
             {
                 try
                 {
-                    this.CreateANewEntity(name, profession, address);
+                    var person = this.CreateANewEntity(name, profession, address);
+
+                    /* if you use Nhibernate and identity generator, the entities are inserted
+                    in the database on Add() method. So added entities are not marked as inserted in this case */
+                    person.Name = name + "1";
                     this.Testee.SubmitChanges();
                 }
                 catch (ValidationException<ValidationResult> e)
