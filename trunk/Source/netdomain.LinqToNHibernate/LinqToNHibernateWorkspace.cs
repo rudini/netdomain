@@ -42,11 +42,6 @@ namespace netdomain.LinqToNHibernate
         private readonly List<IWorkspaceExtension> extensions = new List<IWorkspaceExtension>();
 
         /// <summary>
-        /// Holds the validator to validate the entities.
-        /// </summary>
-        private readonly IValidator validator;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="LinqToNHibernateWorkspace"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -59,17 +54,6 @@ namespace netdomain.LinqToNHibernate
 
             this.context = context;
             WorkspaceBuilder.Current.GetExtensionInstances().ToList().ForEach(ex => { ex.Workspace = this; this.extensions.Add(ex); });
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LinqToNHibernateWorkspace"/> class.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="validator">The validator.</param>
-        [Obsolete("Implement a WorkspaceExtension for validation purposes instead of using the IValidator parameter.")]
-        public LinqToNHibernateWorkspace(ISession context, IValidator validator) : this(context)
-        {
-            this.validator = validator;
         }
 
         /// <summary>
@@ -163,15 +147,6 @@ namespace netdomain.LinqToNHibernate
                 extension.OnSubmittingChanges(deletedEntities, addedEntities, modifiedEntities);
             }
 
-            if (this.validator != null)
-            {
-                // get all modified entities which implement the IValidatable interface
-                IEnumerable<object> validatableEntities = this.context.GetEntitiesFromActionQueues(TrackingState.Added | TrackingState.Modified);
-
-                // hocks in validation code
-                this.validator.ValidateEntities(validatableEntities);
-            }
-
             try
             {
                 this.context.Flush();
@@ -225,16 +200,8 @@ namespace netdomain.LinqToNHibernate
             }
             catch (ADOException exception)
             {
-                if (this.validator != null && typeof(IValidatable).IsAssignableFrom(typeof(T)))
-                {
-                    // hocks in validation code
-                    this.validator.ValidateEntities(new[] { entity });
-                }
-                else
-                {
-                    this.extensions.ForEach(ex => ex.OnExceptionThrown(exception));
-                    throw;
-                }
+                this.extensions.ForEach(ex => ex.OnExceptionThrown(exception));
+                throw;
             }
 
             this.extensions.ForEach(e => e.OnEntityAdded(entity));

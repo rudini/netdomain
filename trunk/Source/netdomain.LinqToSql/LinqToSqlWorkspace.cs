@@ -42,11 +42,6 @@ namespace netdomain.LinqToSql
         private readonly List<IWorkspaceExtension> extensions = new List<IWorkspaceExtension>();
 
         /// <summary>
-        /// Holds the validator to validate the entities.
-        /// </summary>
-        private readonly IValidator validator;
-
-        /// <summary>
         /// Holds the current Transaction.
         /// </summary>
         private Transaction currentTransaction;
@@ -74,17 +69,6 @@ namespace netdomain.LinqToSql
 
             this.context = context;
             WorkspaceBuilder.Current.GetExtensionInstances().ToList().ForEach(ex => { ex.Workspace = this; this.extensions.Add(ex); });
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LinqToSqlWorkspace"/> class.
-        /// </summary>
-        /// <param name="context">The object context.</param>
-        /// <param name="validator">The validator.</param>
-        [Obsolete("Implement a WorkspaceExtension for validation purposes instead of using the IValidator parameter.")]
-        public LinqToSqlWorkspace(DataContext context, IValidator validator) : this(context)
-        {
-            this.validator = validator;
         }
 
         /// <summary>
@@ -185,15 +169,6 @@ namespace netdomain.LinqToSql
                 }
 
                 extension.OnSubmittingChanges(deletedEntities, addedEntities, modifiedEntities);
-            }
-
-            if (this.validator != null)
-            {
-                // get all modified entities which implement the IValidatable interface
-                IEnumerable<object> validatableEntities = this.context.GetEntitiesFromTrackingManager(TrackingState.Added | TrackingState.Modified);
-
-                // hocks in validation code
-                this.validator.ValidateEntities(validatableEntities);
             }
 
             try
