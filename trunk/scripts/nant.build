@@ -5,7 +5,8 @@
   <property name="nunit.exe" value="${ProgramFiles}\nunit 2.4.8\bin\nunit-console.exe"/>
   <property name="msbuild.exe" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" />  
   <property name="partcover.exe" value="${ProgramFiles}\Gubka Bob\PartCover .NET 2\PartCover.exe" />
-  <property name="MSTest.exe" value="${ProgramFiles}\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe" />
+  <property name="IdeEnvironment" value="${ProgramFiles}\Microsoft Visual Studio 10.0\Common7\IDE\" />
+  <property name="MSTest.exe" value="${IdeEnvironment}\MSTest.exe" />
   <property name="SandcastleBuilderGUI.exe" value="${ProgramFiles}\EWSoftware\Sandcastle Help File Builder\SandcastleBuilderGUI.exe" />
   <property name="project.name" value="${project::get-name()}" />
   <property name="project.root" value="${project::get-base-directory()}" />
@@ -58,12 +59,14 @@
 
   <target name="-run.msunittest" description="Runs the ms unit tests">
     <mkdir dir="${results.dir}" unless="${directory::exists(results.dir)}" />
-    <exec program="${MSTest.exe}" failonerror="true">
+    <exec program="${MSTest.exe}" failonerror="true" basedir="${IdeEnvironment}">
       <arg value="/testmetadata:${source.dir}\${source.vsmdi}" />
       <arg value="/resultsfile:${results.dir}\${project.name}.trx" />
     </exec>
+	
+	<echo message="##teamcity[importData id='mstest' file='${results.dir}\${project.name}.trx" />
   </target>
-
+  
   <target name="msunittest" description="Creates a html report from msunittest" depends="-run.msunittest">
     <mkdir dir="${results.dir}" unless="${directory::exists(results.dir)}" />
     <exec program=".\tools\trx2html\trx2html.exe" failonerror="true">
