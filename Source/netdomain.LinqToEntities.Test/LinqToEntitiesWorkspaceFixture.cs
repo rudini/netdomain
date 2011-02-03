@@ -22,8 +22,6 @@ namespace netdomain.LinqToEntities.Test
     using System.Linq;
     using System.Transactions;
     using BusinessObjects;
-    using Contrib.Validation;
-    using FluentValidation.Results;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using netdomain.Abstract;
@@ -56,7 +54,7 @@ namespace netdomain.LinqToEntities.Test
         {
             this.mockery = new Mockery();
             this.RegisterExtensions();
-            this.Testee = new LinqToEntitiesWorkspace(new LinqTestEntities(), new ValidationHelper());
+            this.Testee = new LinqToEntitiesWorkspace(new LinqTestEntities());
         }
 
         [TestCleanup]
@@ -492,32 +490,6 @@ namespace netdomain.LinqToEntities.Test
 
             Assert.IsNull(this.Testee.CreateQuery<PersonPoco>().Where(p => p.Name == name).FirstOrDefault());
             Assert.IsFalse(manager.IsConnected);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ValidationException<ValidationResult>))]
-        public void Validation()
-        {
-            var name = "A too long string for the field name in db";
-            var profession = "A too long string for the field profession";
-            var address = "A too long string for the field name";
-
-            using (new TransactionScope())
-            {
-                try
-                {
-                    this.CreateANewEntity(name, profession, address);
-                    this.Testee.SubmitChanges();
-                }
-                catch (ValidationException<ValidationResult> e)
-                {
-                    Assert.AreEqual(3, e.ValidationResults.Errors.Count);
-                    Assert.AreEqual("Name", e.ValidationResults.Errors.ElementAt(0).PropertyName);
-                    Assert.AreEqual("Beruf", e.ValidationResults.Errors.ElementAt(1).PropertyName);
-                    Assert.AreEqual("Name", e.ValidationResults.Errors.ElementAt(2).PropertyName);
-                    throw;
-                }
-            }
         }
 
         [TestMethod]

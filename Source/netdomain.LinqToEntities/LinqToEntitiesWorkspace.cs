@@ -46,11 +46,6 @@ namespace netdomain.LinqToEntities
         private readonly List<IWorkspaceExtension> extensions = new List<IWorkspaceExtension>();
 
         /// <summary>
-        /// Holds the validator to validate the entities.
-        /// </summary>
-        private readonly IValidator validator;
-
-        /// <summary>
         /// Holds the delegate to the ClearCache method on the <see cref="T:netdomain.LinqToEntities.ObjectContextExtender"/>
         /// </summary>
         private Action clearCacheDelegate;
@@ -80,17 +75,6 @@ namespace netdomain.LinqToEntities
             this.context.ObjectStateManager.ObjectStateManagerChanged += this.OnObjectStateManagerChanged;
 
             WorkspaceBuilder.Current.GetExtensionInstances().ToList().ForEach(ex => { ex.Workspace = this; this.extensions.Add(ex); });
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LinqToEntitiesWorkspace"/> class.
-        /// </summary>
-        /// <param name="objectContext">The object context.</param>
-        /// <param name="validator">The validator.</param>
-        [Obsolete("Implement a WorkspaceExtension for validation purposes instead of using the IValidator parameter.")]
-        public LinqToEntitiesWorkspace(ObjectContext objectContext, IValidator validator) : this(objectContext)
-        {
-            this.validator = validator;
         }
 
         /// <summary>
@@ -199,15 +183,6 @@ namespace netdomain.LinqToEntities
                 }
 
                 extension.OnSubmittingChanges(deletedEntities, addedEntities, modifiedEntities);
-            }
-
-            if (this.validator != null)
-            {
-                // get all modified entities which implement the IValidatable interface
-                IEnumerable<object> validatableEntities = this.context.GetEntitiesFromObjectStateManager(EntityState.Added | EntityState.Modified);
-
-                // hocks in validation code
-                this.validator.ValidateEntities(validatableEntities);
             }
 
             try

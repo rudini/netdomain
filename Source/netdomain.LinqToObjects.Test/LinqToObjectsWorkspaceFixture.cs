@@ -23,8 +23,6 @@ namespace netdomain.LinqToObjects.Test
     using System.Transactions;
     using Abstract;
     using BusinessObjects;
-    using Contrib.Validation;
-    using FluentValidation.Results;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using NMock2;
@@ -56,7 +54,7 @@ namespace netdomain.LinqToObjects.Test
         {
             this.mockery = new Mockery();
             this.RegisterExtensions();
-            this.Testee = new InMemoryWorkspace(new ValidationHelper()); // TODO: move the test to contrib
+            this.Testee = new InMemoryWorkspace();
         }
 
         [TestCleanup]
@@ -308,29 +306,6 @@ namespace netdomain.LinqToObjects.Test
         public void TransactionWithExplicitConnectionHandling()
         {
             // Not supported by InMemoryContext
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ValidationException<ValidationResult>))]
-        public void Validation()
-        {
-            var name = "A too long string for the field name in db";
-            var profession = "A too long string for the field profession";
-            var address = "A too long string for the field name";
-
-            try
-            {
-                this.CreateANewEntity(name, profession, address);
-                this.Testee.SubmitChanges();
-            }
-            catch (ValidationException<ValidationResult> e)
-            {
-                Assert.AreEqual(3, e.ValidationResults.Errors.Count);
-                Assert.AreEqual("Name", e.ValidationResults.Errors.ElementAt(0).PropertyName);
-                Assert.AreEqual("Beruf", e.ValidationResults.Errors.ElementAt(1).PropertyName);
-                Assert.AreEqual("Name", e.ValidationResults.Errors.ElementAt(2).PropertyName);
-                throw;
-            }
         }
 
         [TestMethod]

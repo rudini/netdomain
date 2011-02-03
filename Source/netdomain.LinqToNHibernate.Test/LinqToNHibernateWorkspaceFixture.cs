@@ -22,8 +22,6 @@ namespace netdomain.LinqToNHibernate.Test
     using System.Linq;
     using System.Transactions;
     using BusinessObjects;
-    using Contrib.Validation;
-    using FluentValidation.Results;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using netdomain.Abstract;
@@ -57,7 +55,7 @@ namespace netdomain.LinqToNHibernate.Test
         {
             this.mockery = new Mockery();
             this.RegisterExtensions();
-            this.Testee = new LinqToNHibernateWorkspace(new LinqToNHibernateContext().GetSession(), new ValidationHelper());
+            this.Testee = new LinqToNHibernateWorkspace(new LinqToNHibernateContext().GetSession());
         }
 
         [TestCleanup]
@@ -495,36 +493,6 @@ namespace netdomain.LinqToNHibernate.Test
             }
 
             Assert.IsNull(this.Testee.CreateQuery<Person>().Where(p => p.Name == name).FirstOrDefault());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ValidationException<ValidationResult>))]
-        public void Validation()
-        {
-            var name = "A too long string for the field name in db";
-            var profession = "A too long string for the field profession";
-            var address = "A too long string for the field name";
-
-            using (new TransactionScope())
-            {
-                try
-                {
-                    var person = this.CreateANewEntity(name, profession, address);
-
-                    /* if you use Nhibernate and identity generator, the entities are inserted
-                    in the database on Add() method. So added entities are not marked as inserted in this case */
-                    person.Name = name + "1";
-                    this.Testee.SubmitChanges();
-                }
-                catch (ValidationException<ValidationResult> e)
-                {
-                    Assert.AreEqual(3, e.ValidationResults.Errors.Count);
-                    Assert.AreEqual("Name", e.ValidationResults.Errors.ElementAt(0).PropertyName);
-                    Assert.AreEqual("Beruf", e.ValidationResults.Errors.ElementAt(1).PropertyName);
-                    Assert.AreEqual("Name", e.ValidationResults.Errors.ElementAt(2).PropertyName);
-                    throw;
-                }
-            }
         }
 
         [TestMethod]

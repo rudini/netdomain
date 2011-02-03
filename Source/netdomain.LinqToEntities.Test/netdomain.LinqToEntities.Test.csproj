@@ -117,10 +117,6 @@
       <Project>{7BF69BCF-68C3-4311-A9E8-1D0F99031F36}</Project>
       <Name>netdomain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\netdomain.Contrib\netdomain.Contrib.csproj">
-      <Project>{C676691E-71A3-4AEF-B11E-57944902E206}</Project>
-      <Name>netdomain.Contrib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\netdomain.LinqToEntities\netdomain.LinqToEntities.csproj">
       <Project>{008AD56E-961F-4030-A8B5-E5256538FEEF}</Project>
       <Name>netdomain.LinqToEntities</Name>

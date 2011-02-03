@@ -73,10 +73,6 @@
       <Project>{7BF69BCF-68C3-4311-A9E8-1D0F99031F36}</Project>
       <Name>netdomain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\netdomain.Contrib\netdomain.Contrib.csproj">
-      <Project>{C676691E-71A3-4AEF-B11E-57944902E206}</Project>
-      <Name>netdomain.Contrib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\netdomain.LinqToObjects\netdomain.LinqToObjects.csproj">
       <Project>{31986B5C-7FBE-4A80-AA3E-E2B19F33BFD4}</Project>
       <Name>netdomain.LinqToObjects</Name>

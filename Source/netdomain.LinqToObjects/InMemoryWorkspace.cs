@@ -40,27 +40,12 @@ namespace netdomain.LinqToObjects
         private readonly List<IWorkspaceExtension> extensions = new List<IWorkspaceExtension>();
 
         /// <summary>
-        /// Holds the validator to validate the entities.
-        /// </summary>
-        private readonly IValidator validator;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryWorkspace"/> class.
         /// </summary>
         public InMemoryWorkspace()
         {
             this.context = new InMemoryContext();
             WorkspaceBuilder.Current.GetExtensionInstances().ToList().ForEach(ex => { ex.Workspace = this; this.extensions.Add(ex); });
-        }
-        
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InMemoryWorkspace"/> class.
-        /// </summary>
-        /// <param name="validator">The validator.</param>
-        [Obsolete("Implement a WorkspaceExtension for validation purposes instead of using the IValidator parameter.")]
-        public InMemoryWorkspace(IValidator validator) : this()
-        {
-            this.validator = validator;
         }
 
         /// <summary>
@@ -129,15 +114,6 @@ namespace netdomain.LinqToObjects
                 }
 
                 extension.OnSubmittingChanges(deletedEntities, addedEntities, modifiedEntities);
-            }
-
-            if (this.validator != null)
-            {
-                // get all modified entities which implement the IValidatable interface
-                IEnumerable<object> validatableEntities = this.context.GetEntitiesFromTrackingManager(TrackingState.Added | TrackingState.Modified);
-
-                // hocks in validation code
-                this.validator.ValidateEntities(validatableEntities);
             }
 
             this.context.SubmitChanges();
