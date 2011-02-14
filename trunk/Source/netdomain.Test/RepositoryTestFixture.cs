@@ -19,87 +19,85 @@
 namespace netdomain
 {
     using System.Linq;
-    using Abstract;
-    using LinqToObjects;
-    using LinqToObjects.Test.BusinessObjects;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using NMock2;
+
+    using Moq;
+
+    using netdomain.Abstract;
+    using netdomain.LinqToObjects;
+    using netdomain.LinqToObjects.Test.BusinessObjects;
     using netdomain.Specification;
+
+    using NUnit.Framework;
 
     /// <summary>
     /// Summary description for RepositoryTestFixture
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class RepositoryTestFixture
     {
-        private Mockery mockery;
-        private IWorkspace workspace;
+        private Mock<IWorkspace> workspaceMock;
         private InMemoryQueryableContext<Person> inMemoryQueryContext;
         private PersonRepository testee;
 
-        /// <summary>
-        /// Gets or sets the test context which provides
-        /// information about and functionality for the current test run.
-        /// </summary>
-        public TestContext TestContext { get; set; }
-
-        [TestInitialize]
+        [SetUp]
         public void SetUp()
         {
-            this.mockery = new Mockery();
-            this.workspace = this.mockery.NewMock<IWorkspace>();
+            this.workspaceMock = new Mock<IWorkspace>();
 
             this.inMemoryQueryContext = new InMemoryQueryableContext<Person>(new InMemoryContext());
-            Expect.Once.On(this.workspace).Method("CreateQuery", typeof(Person)).Will(Return.Value(this.inMemoryQueryContext));
-
-            this.testee = new PersonRepository(this.workspace);
+            this.workspaceMock.Setup(w => w.CreateQuery<Person>()).Returns(this.inMemoryQueryContext);
+ 
+            this.testee = new PersonRepository(this.workspaceMock.Object);
         }
 
-        [TestCleanup]
+        [TearDown]
         public void TearDown()
         {
-            this.mockery.Dispose();
         }
 
-        [TestMethod]
-        public void Add()
+        [Test]
+        public void Add_MustCallAddOnWorkspace()
         {
+            // Arrange
             var person = new Person();
 
-            Expect.Once.On(this.workspace).Method("Add").With(person);
-
+            // Act
             this.testee.Add(person);
 
-            this.mockery.VerifyAllExpectationsHaveBeenMet();
+            // Assert
+            this.workspaceMock.Verify(w => w.Add(person));
         }
 
-        [TestMethod]
-        public void Delete()
+        [Test]
+        public void Delete_MustCallDeleteOnWorkspace()
         {
+            // Arrange
             var person = new Person();
 
-            Expect.Once.On(this.workspace).Method("Delete").With(person);
-
+            // Act
             this.testee.Delete(person);
 
-            this.mockery.VerifyAllExpectationsHaveBeenMet();
+            // Assert
+            this.workspaceMock.Verify(w => w.Delete(person));
         }
 
-        [TestMethod]
-        public void Update()
+        [Test]
+        public void Update_MustCallUpdateOnWorkspace()
         {
+            // Arrange
             var person = new Person();
 
-            Expect.Once.On(this.workspace).Method("Update").With(person);
-
+            // Act
             this.testee.Update(person);
 
-            this.mockery.VerifyAllExpectationsHaveBeenMet();
+            // Assert
+            this.workspaceMock.Verify(w => w.Update(person));
         }
 
-        [TestMethod]
-        public void Specification()
+        [Test]
+        public void Specification_MustReturnTheRelevantEntity()
         {
+            // Arrange
             var name = "Testname";
             var beruf = "Testberuf";
 
@@ -110,11 +108,11 @@ namespace netdomain
             var person = new Person { Name = name, Beruf = beruf };
             this.inMemoryQueryContext.Insert(person);
 
+            // Act
             var fetchedPerson = this.testee.FindBySpecification(nameEqualsTestnameAndBerufEqualsTestberuf).First();
 
+            // Assert
             Assert.AreEqual(person, fetchedPerson);
-
-            this.mockery.VerifyAllExpectationsHaveBeenMet();
         }
     }
 

@@ -19,27 +19,25 @@
 namespace netdomain.LinqToEntities.Test
 {
     using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data.SqlClient;
     using System.Linq;
     using System.Transactions;
     using BusinessObjects;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     using Moq;
     using netdomain.Abstract;
-    using NMock2;
+    using netdomain.Abstract.Configuration;
+
+    using NUnit.Framework;
 
     /// <summary>
     /// Summary description for LinqToEntitiesDataSourceUnitTest
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class LinqToEntitiesWorkspaceFixture
     {
-        private Mockery mockery;
-
-        /// <summary>
-        /// Gets or sets the test context which provides
-        /// information about and functionality for the current test run.
-        /// </summary>
-        public TestContext TestContext { get; set; }
+        private Mock<IConfigurationManager> configurationManagerMock;
 
         public IWorkspace Testee { get; set; }
 
@@ -49,25 +47,35 @@ namespace netdomain.LinqToEntities.Test
 
         public Mock<IWorkspaceFactory> WorkspaceFactoryMock { get; set; }
 
-        [TestInitialize]
+        [SetUp]
         public void SetUp()
         {
-            this.mockery = new Mockery();
+            this.configurationManagerMock = new Mock<IConfigurationManager>();
+
+            var connectionStringSettingsCollection = new ConnectionStringSettingsCollection 
+            { 
+                new ConnectionStringSettings(
+                "LinqTestEntities", 
+                @"metadata=res://*/BusinessObjects.Model1.csdl|res://*/BusinessObjects.Model1.ssdl|res://*/BusinessObjects.Model1.msl;provider=System.Data.SqlClient;provider connection string='Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\App_Data\LinqTest.mdf;Integrated Security=True;User Instance=True'") 
+            };
+
+            this.configurationManagerMock.Setup(con => con.ConnectionStrings).Returns(connectionStringSettingsCollection);
+
             this.RegisterExtensions();
-            this.Testee = new LinqToEntitiesWorkspace(new LinqTestEntities());
+            this.Testee = new LinqToEntitiesWorkspace(new LinqTestEntities(this.configurationManagerMock.Object.ConnectionStrings["LinqTestEntities"].ConnectionString));
         }
 
-        [TestCleanup]
+        [TearDown]
         public void TearDown()
         {
             WorkspaceBuilder.Current = null;
-            this.mockery.Dispose();
             this.Testee.Dispose();
+            SqlConnection.ClearAllPools();
         }
 
         #region derived tests
 
-        [TestMethod]
+        [Test]
         public void AddEntity()
         {
             var name = "Testname";
@@ -86,7 +94,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteEntity()
         {
             var name = "Testname";
@@ -114,7 +122,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UpdateEntity()
         {
             var name = "Testname";
@@ -141,7 +149,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void DetachEntity()
         {
             var name = "Testname";
@@ -165,7 +173,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void AttachEntity()
         {
             var name = "Testname";
@@ -191,7 +199,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UpdateDetachedEntity()
         {
             var name = "Testname";
@@ -217,7 +225,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void AttachEntityToANewWorkspace()
         {
             var name = "Testname";
@@ -232,7 +240,7 @@ namespace netdomain.LinqToEntities.Test
 
                 this.Testee.Detach(newPerson);
 
-                var ctx1 = new LinqTestEntities();
+                var ctx1 = new LinqTestEntities(this.configurationManagerMock.Object.ConnectionStrings["LinqTestEntities"].ConnectionString);
                 var ws1 = new LinqToEntitiesWorkspace(ctx1);
 
                 newPerson.Beruf = updatedProfession;
@@ -247,7 +255,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CreateQuery()
         {
             var name = "Testname";
@@ -265,7 +273,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetByKey()
         {
             var name = "Testname";
@@ -283,7 +291,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetByKeyFromDb()
         {
             var name = "Testname";
@@ -307,7 +315,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void RefreshEntity()
         {
             var name = "Testname";
@@ -335,7 +343,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CleanCache()
         {
             var name = "Testname";
@@ -362,7 +370,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void Include()
         {
             var name = "Testname";
@@ -382,7 +390,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(OptimisticOfflineLockException))]
         public void ConcurencyException()
         {
@@ -395,10 +403,10 @@ namespace netdomain.LinqToEntities.Test
                 this.Testee.Add(person);
                 this.Testee.SubmitChanges();
 
-                var ctx1 = new LinqTestEntities();
+                var ctx1 = new LinqTestEntities(this.configurationManagerMock.Object.ConnectionStrings["LinqTestEntities"].ConnectionString);
                 var ws1 = new LinqToEntitiesWorkspace(ctx1);
 
-                var ctx2 = new LinqTestEntities();
+                var ctx2 = new LinqTestEntities(this.configurationManagerMock.Object.ConnectionStrings["LinqTestEntities"].ConnectionString);
                 var ws2 = new LinqToEntitiesWorkspace(ctx2);
 
                 var person1 = ws1.CreateQuery<PersonPoco>().Where(p => p.Name == name).First();
@@ -422,7 +430,7 @@ namespace netdomain.LinqToEntities.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void DisconnectReconnect()
         {
             IConnectionManager manager = this.Testee.ConnectionManager;
@@ -433,8 +441,8 @@ namespace netdomain.LinqToEntities.Test
             Assert.IsTrue(manager.IsConnected);
         }
 
-        [TestMethod]
-        [Ignore] // MSDTC must be available
+        [Test]
+        [Ignore("MSDTC must be available")] 
         public void TransactionWithExplicitConnectionHandling()
         {
             var name = "Testname";
@@ -467,8 +475,8 @@ namespace netdomain.LinqToEntities.Test
             Assert.IsNull(this.Testee.CreateQuery<PersonPoco>().Where(p => p.Name == name).FirstOrDefault());
         }
 
-        [TestMethod]
-        [Ignore] // MSDTC must be available
+        [Test]
+        [Ignore("MSDTC must be available")]
         public void Transaction()
         {
             var name = "Testname";
@@ -492,7 +500,7 @@ namespace netdomain.LinqToEntities.Test
             Assert.IsFalse(manager.IsConnected);
         }
 
-        [TestMethod]
+        [Test]
         public void IsDirty()
         {
             var name1 = "Testname1";
@@ -538,7 +546,7 @@ namespace netdomain.LinqToEntities.Test
             Assert.IsFalse(this.Testee.IsDirty());
         }
 
-        [TestMethod]
+        [Test]
         public void NestedWorkspaceScope()
         {
             // arrange
@@ -571,7 +579,7 @@ namespace netdomain.LinqToEntities.Test
             this.WorkspaceFactoryMock.Verify(factory => factory.ReleaseWorkspace(It.IsAny<IWorkspace>()), Times.Once());
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityAddedOnWorkspaceExtension()
         {
             // Arrange
@@ -585,7 +593,7 @@ namespace netdomain.LinqToEntities.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityDeletedOnWorkspaceExtension()
         {
             // Arrange
@@ -600,7 +608,7 @@ namespace netdomain.LinqToEntities.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityUpdatedOnWorkspaceExtension()
         {
             // Arrange
@@ -623,7 +631,7 @@ namespace netdomain.LinqToEntities.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnSubmittingChangesOnWorkspaceExtension()
         {
             // Arrange
@@ -653,7 +661,7 @@ namespace netdomain.LinqToEntities.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnCacheCleanedOnWorkspaceExtension()
         {
             // Act
@@ -663,7 +671,7 @@ namespace netdomain.LinqToEntities.Test
             this.ExtensionMock.Verify(e => e.OnCacheCleaned());
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityRefreshedOnWorkspaceExtension()
         {
             // Arrange
@@ -683,7 +691,7 @@ namespace netdomain.LinqToEntities.Test
             this.ExtensionMock.Verify(e => e.OnEntityRefreshed(person1));
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityAttachedOnWorkspaceExtension()
         {
             // Arrange
@@ -704,7 +712,7 @@ namespace netdomain.LinqToEntities.Test
             this.ExtensionMock.Verify(e => e.OnEntityAttached(person1));
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityDetachedOnWorkspaceExtension()
         {
             // Arrange
@@ -725,7 +733,7 @@ namespace netdomain.LinqToEntities.Test
             this.ExtensionMock.Verify(e => e.OnEntityDetached(person1));
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnOptimisticOfflineLockExceptionThrownOnWorkspaceExtension()
         {
             // Arrange

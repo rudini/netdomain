@@ -19,8 +19,9 @@
 namespace netdomain
 {
     using System;
-    using Abstract;
     using System.Collections.Generic;
+
+    using netdomain.Abstract;
 
     /// <summary>
     /// Base class for workspace extensions that implements all members as virtual methods.

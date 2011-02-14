@@ -22,6 +22,8 @@ namespace netdomain.Helpers
     using System.Data.Linq.Mapping;
     using System.Reflection;
 
+    using netdomain.Abstract.Configuration;
+
     /// <summary>
     /// Implements helper methods to load the mapping from a mapping file or embedded resource.
     /// </summary>
@@ -30,11 +32,14 @@ namespace netdomain.Helpers
         /// <summary>
         /// Gets the <see cref="XmlMappingSource"/> to configure the DataContext.
         /// </summary>
-        /// <returns>The <see cref="XmlMappingSource"/> to configure the DataContext.</returns>
-        public static XmlMappingSource GetMapping()
+        /// <param name="configurationManager">The configuration manager.</param>
+        /// <returns>
+        /// The <see cref="XmlMappingSource"/> to configure the DataContext.
+        /// </returns>
+        public static XmlMappingSource GetMapping(IConfigurationManager configurationManager)
         {            
             XmlMappingSource mapping = null;
-            var mappingResource = ConfigurationManager.AppSettings["LinqToSqlMapping"];
+            var mappingResource = configurationManager.AppSettings["LinqToSqlMapping"];
 
             if (mappingResource.StartsWith("res://"))
             {

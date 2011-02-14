@@ -39,20 +39,23 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\ExternalLibs\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Moq">
       <HintPath>..\ExternalLibs\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="netdomain.Abstract">
-      <HintPath>..\bin\Debug\netdomain.Abstract.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate">
+    <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\ExternalLibs\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="NMock2">
-      <HintPath>..\ExternalLibs\NMock2.dll</HintPath>
+    <Reference Include="NHibernate.ByteCode.LinFu">
+      <HintPath>..\ExternalLibs\NHibernate.ByteCode.LinFu.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Linq, Version=1.0.0.4000, Culture=neutral, PublicKeyToken=444cf6a87fdab271, processorArchitecture=MSIL">
+      <HintPath>..\ExternalLibs\NHibernate.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\ExternalLibs\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -83,6 +86,10 @@
     <EmbeddedResource Include="BusinessObjects\Person.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\netdomain.Abstract\netdomain.Abstract.csproj">
+      <Project>{35C4C7E5-3C3E-4FE0-818E-C77718FC1B2A}</Project>
+      <Name>netdomain.Abstract</Name>
+    </ProjectReference>
     <ProjectReference Include="..\netdomain.LinqToNHibernate\netdomain.LinqToNHibernate.csproj">
       <Project>{C977E995-9226-49A2-99A1-8E4773156E7E}</Project>
       <Name>netdomain.LinqToNHibernate</Name>
@@ -94,6 +101,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\App_Data\LinqTest.mdf">
+      <Link>App_Data\LinqTest.mdf</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\App_Data\LinqTest_log.ldf">
+      <Link>App_Data\LinqTest_log.ldf</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>LinqTest.mdf</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

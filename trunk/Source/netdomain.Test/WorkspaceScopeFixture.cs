@@ -19,51 +19,18 @@
 namespace netdomain
 {
     using LinqToObjects.Test.BusinessObjects;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using netdomain.Abstract;
+
+    using NUnit.Framework;
 
     /// <summary>
     /// Summary description for WorkspaceScopeFixture
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class WorkspaceScopeFixture
     {
-        private TestContext testContextInstance;
-
-        /// <summary>
-        /// Gets or sets the test context which provides 
-        /// information about and functionality for the current test run.
-        /// </summary>
-        public TestContext TestContext
-        {
-            get { return this.testContextInstance; }
-            set { this.testContextInstance = value; }
-        }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
-
-        [TestMethod]
+        [Test]
         public void CanRegisterWorkspaceFactory()
         {
             var workspaceMock = new Mock<IWorkspace>();
@@ -76,7 +43,7 @@ namespace netdomain
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
 
-        [TestMethod]
+        [Test]
         public void ReleaseMethodCallAfterUsingBlock()
         {
             var workspaceMock = new Mock<IWorkspace>();
@@ -92,7 +59,7 @@ namespace netdomain
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
 
-        [TestMethod]
+        [Test]
         public void CreateInstanceByType()
         {
             var workspaceType = typeof(string);
@@ -110,7 +77,7 @@ namespace netdomain
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
 
-        [TestMethod]
+        [Test]
         public void CreateANewRepositoryInAWorkspaceScope()
         {
             var person = new Person { Name = "TestName", Beruf = "TestBeruf" };
@@ -131,7 +98,7 @@ namespace netdomain
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
 
-        [TestMethod]
+        [Test]
         public void NestedWorkspaceScopesWithRequiredWorkspaceOption()
         {
             var workspaceFactoryMock = this.RegisterWorkspaceFactory();
@@ -153,7 +120,7 @@ namespace netdomain
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
 
-        [TestMethod]
+        [Test]
         public void ReleaseNestedWorkspaceScopesWithRequiredWorkspaceOption()
         {
             var workspaceFactoryMock = this.RegisterWorkspaceFactory();
@@ -174,7 +141,7 @@ namespace netdomain
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
 
-        [TestMethod]
+        [Test]
         public void NestedWorkspaceScopesWithRequiresNewWorkspaceOption()
         {
             var workspaceFactoryMock = this.RegisterWorkspaceFactory();
@@ -196,7 +163,7 @@ namespace netdomain
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
 
-        [TestMethod]
+        [Test]
         public void ReleaseNestedWorkspaceScopesWithRequiresNewWorkspaceOption()
         {
             var workspaceFactoryMock = this.RegisterWorkspaceFactory();
@@ -217,7 +184,7 @@ namespace netdomain
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
 
-        [TestMethod]
+        [Test]
         public void NestedWorkspaceScopesWithRequiredWorkspaceOptionAsTypedWorkspace()
         {
             var workspaceFactoryMock = this.RegisterWorkspaceFactory();
