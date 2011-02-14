@@ -63,7 +63,19 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
         /// </summary>
         private static void SetupNHibernate()
         {
-            var cfg = new Configuration().Configure();
+            //Environment.BytecodeProvider = new EnhancedBytecode(container);
+            var cfg = new Configuration();
+            cfg.SetProperty(Environment.ConnectionDriver, "NHibernate.Driver.SqlClientDriver");
+            cfg.SetProperty(Environment.ConnectionString, @"Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\App_Data\LinqTest.mdf;Integrated Security=True;User Instance=True");
+            cfg.SetProperty(Environment.BatchSize, "10");
+            cfg.SetProperty(Environment.ShowSql, "false");
+            cfg.SetProperty(Environment.GenerateStatistics, "true");
+            cfg.SetProperty(Environment.Dialect, "NHibernate.Dialect.MsSql2005Dialect");
+            cfg.SetProperty(Environment.CommandTimeout, "60");
+            cfg.SetProperty(Environment.QuerySubstitutions, "true 1, false 0, yes 'Y', no 'N'");
+            cfg.SetProperty(Environment.ProxyFactoryFactoryClass, "NHibernate.ByteCode.LinFu.ProxyFactoryFactory, NHibernate.ByteCode.LinFu");
+
+            //var cfg = new Configuration().Configure();
             cfg.AddAssembly(typeof(Person).Assembly);
             sessionFactory = cfg.BuildSessionFactory();
         }

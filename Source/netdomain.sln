@@ -2,10 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D6EA077-C941-4282-A3AC-8764F807770B}"
-	ProjectSection(SolutionItems) = preProject
-		netdomain.testrunconfig = netdomain.testrunconfig
-		netdomain.vsmdi = netdomain.vsmdi
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{706D6B24-F3BB-4D79-A8A9-068FCE9CAD09}"
 EndProject
@@ -38,9 +34,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "netdomain.LinqToEntities.Test", "netdomain.LinqToEntities.Test\netdomain.LinqToEntities.Test.csproj", "{ADD8F0DA-EE98-4027-9E4D-93577163FBFC}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = netdomain.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -58,14 +51,6 @@ Global
 		{E8DD9308-C979-434D-901D-1F00419AD3D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8DD9308-C979-434D-901D-1F00419AD3D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8DD9308-C979-434D-901D-1F00419AD3D3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4BE515D4-86A0-4E89-B854-C620FFA20F9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4BE515D4-86A0-4E89-B854-C620FFA20F9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4BE515D4-86A0-4E89-B854-C620FFA20F9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4BE515D4-86A0-4E89-B854-C620FFA20F9A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB7B8A3A-3980-4F44-A90D-AA642BE108A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB7B8A3A-3980-4F44-A90D-AA642BE108A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB7B8A3A-3980-4F44-A90D-AA642BE108A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB7B8A3A-3980-4F44-A90D-AA642BE108A7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C977E995-9226-49A2-99A1-8E4773156E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C977E995-9226-49A2-99A1-8E4773156E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C977E995-9226-49A2-99A1-8E4773156E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU

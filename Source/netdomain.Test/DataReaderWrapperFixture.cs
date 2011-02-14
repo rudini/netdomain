@@ -23,40 +23,26 @@ namespace netdomain
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Transactions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass]
+    using NUnit.Framework;
+
+    [TestFixture]
     public class DataReaderWrapperFixture
     {
-        /// <summary>
-        /// Test context instance.
-        /// </summary>
-        private TestContext testContextInstance;
-
-        /// <summary>
-        /// Gets or sets the test context which provides
-        /// information about and functionality for the current test run.
-        /// </summary>
-        public TestContext TestContext
-        {
-            get { return this.testContextInstance; }
-            set { this.testContextInstance = value; }
-        }
-
         private const string Id = "Id";
 
         private const string Message = "Message";
 
         private IEnumerable<LogMessage> testdata;
 
-        [TestInitialize]
+        [SetUp]
         public void Setup()
         {
             var logMessage = new LogMessage { Id = Id, Message = Message };
             this.testdata = new List<LogMessage> { logMessage };
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ExceptionCallAMethodBeforeACallToRead()
         {
@@ -66,7 +52,7 @@ namespace netdomain
             Assert.Fail("The test must fail because the enumeration has not been started.");
         }
 
-        [TestMethod]
+        [Test]
         public void CorrectSequenceOfGetValueMethod()
         {
             var dataReader = new DataReaderWrapper(this.testdata);
@@ -76,7 +62,7 @@ namespace netdomain
             Assert.AreEqual(Message, dataReader.GetValue(1), "The value at index {0} must be {1}", 1, Message);
         }
 
-        [TestMethod]
+        [Test]
         public void GetValueByGetOrdinal()
         {
             var dataReader = new DataReaderWrapper(this.testdata);
@@ -86,7 +72,7 @@ namespace netdomain
             Assert.AreEqual(Message, dataReader.GetValue(dataReader.GetOrdinal(Message)), "The value at index {0} must be {1}", Message, Message);
         }
 
-        [TestMethod]
+        [Test]
         public void WriteToServer()
         {
             var logMessageList = new List<LogMessage>();

@@ -23,24 +23,16 @@ namespace netdomain.LinqToObjects.Test
     using System.Transactions;
     using Abstract;
     using BusinessObjects;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using NMock2;
+
+    using NUnit.Framework;
 
     /// <summary>
     /// Summary description for InMemoryDataSourceUnitTest
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class LinqToObjectsWorkspaceFixture
     {
-        /// <summary>
-        /// Gets or sets the test context which provides
-        /// information about and functionality for the current test run.
-        /// </summary>
-        public TestContext TestContext { get; set; }
-
-        private Mockery mockery;
-
         protected IWorkspace Testee { get; set; }
 
         protected Mock<IWorkspaceBuilder> WorkspaceBuilderMock { get; set; }
@@ -49,25 +41,23 @@ namespace netdomain.LinqToObjects.Test
 
         protected Mock<IWorkspaceFactory> WorkspaceFactoryMock { get; set; }
 
-        [TestInitialize]
+        [SetUp]
         public void SetUp()
         {
-            this.mockery = new Mockery();
             this.RegisterExtensions();
             this.Testee = new InMemoryWorkspace();
         }
 
-        [TestCleanup]
+        [TearDown]
         public void TearDown()
         {
             WorkspaceBuilder.Current = null;
-            this.mockery.Dispose();
             this.Testee.Dispose();
         }
 
         #region derived tests
 
-        [TestMethod]
+        [Test]
         public void AddEntity()
         {
             var name = "Testname";
@@ -86,7 +76,7 @@ namespace netdomain.LinqToObjects.Test
             this.Testee.SubmitChanges();
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteEntity()
         {
             var name = "Testname";
@@ -109,7 +99,7 @@ namespace netdomain.LinqToObjects.Test
             Assert.IsNull(fetchedPerson, "The fetched person must be null.");
         }
 
-        [TestMethod]
+        [Test]
         public void UpdateEntity()
         {
             var name = "Testname";
@@ -136,13 +126,13 @@ namespace netdomain.LinqToObjects.Test
             this.Testee.SubmitChanges();
         }
 
-        [TestMethod]
+        [Test]
         public void DetachEntity()
         {
             // Not supported by InMemoryContext
         }
 
-        [TestMethod]
+        [Test]
         public void AttachEntity()
         {
             var name = "Testname";
@@ -168,7 +158,7 @@ namespace netdomain.LinqToObjects.Test
             this.Testee.SubmitChanges();
         }
 
-        [TestMethod]
+        [Test]
         public void UpdateDetachedEntity()
         {
             var name = "Testname";
@@ -194,13 +184,13 @@ namespace netdomain.LinqToObjects.Test
             this.Testee.SubmitChanges();
         }
 
-        [TestMethod]
+        [Test]
         public void AttachEntityToANewWorkspace()
         {
             // Not supported by InMemoryContext
         }
 
-        [TestMethod]
+        [Test]
         public void CreateQuery()
         {
             var name = "Testname";
@@ -218,25 +208,25 @@ namespace netdomain.LinqToObjects.Test
             this.Testee.SubmitChanges();
         }
 
-        [TestMethod]
+        [Test]
         public void GetByKey()
         {
             // Not supported by InMemoryContext
         }
 
-        [TestMethod]
+        [Test]
         public void GetByKeyFromDb()
         {
             // Not supported by InMemoryContext
         }
 
-        [TestMethod]
+        [Test]
         public void RefreshEntity()
         {
             // Not supported by InMemoryContext
         }
 
-        [TestMethod]
+        [Test]
         public void CleanCache()
         {
             var name = "Testname";
@@ -263,7 +253,7 @@ namespace netdomain.LinqToObjects.Test
             this.Testee.SubmitChanges();
         }
 
-        [TestMethod]
+        [Test]
         public void Include()
         {
             var name = "Testname";
@@ -283,7 +273,7 @@ namespace netdomain.LinqToObjects.Test
             this.Testee.SubmitChanges();
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(OptimisticOfflineLockException))]
         public void ConcurencyException()
         {
@@ -291,7 +281,7 @@ namespace netdomain.LinqToObjects.Test
             throw new OptimisticOfflineLockException("Not supported by InMemoryContext", null);
         }
 
-        [TestMethod]
+        [Test]
         public void DisconnectReconnect()
         {
             // Not supported by InMemoryContext
@@ -302,13 +292,13 @@ namespace netdomain.LinqToObjects.Test
             // Not supported by InMemoryContext
         }
 
-        [TestMethod]
+        [Test]
         public void TransactionWithExplicitConnectionHandling()
         {
             // Not supported by InMemoryContext
         }
 
-        [TestMethod]
+        [Test]
         public void IsDirty()
         {
             var name1 = "Testname1";
@@ -354,7 +344,7 @@ namespace netdomain.LinqToObjects.Test
             Assert.IsFalse(this.Testee.IsDirty());
         }
 
-        [TestMethod]
+        [Test]
         public void NestedWorkspaceScope()
         {
             // Arrange
@@ -387,7 +377,7 @@ namespace netdomain.LinqToObjects.Test
             this.WorkspaceFactoryMock.Verify(factory => factory.ReleaseWorkspace(It.IsAny<IWorkspace>()), Times.Once());
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityAddedOnWorkspaceExtension()
         {
             // Arrange
@@ -401,7 +391,7 @@ namespace netdomain.LinqToObjects.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityDeletedOnWorkspaceExtension()
         {
             // Arrange
@@ -416,7 +406,7 @@ namespace netdomain.LinqToObjects.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityUpdatedOnWorkspaceExtension()
         {
             // Arrange
@@ -430,7 +420,7 @@ namespace netdomain.LinqToObjects.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnSubmittingChangesOnWorkspaceExtension()
         {
             // Arrange
@@ -460,7 +450,7 @@ namespace netdomain.LinqToObjects.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnCacheCleanedOnWorkspaceExtension()
         {
             // Act
@@ -470,13 +460,13 @@ namespace netdomain.LinqToObjects.Test
             this.ExtensionMock.Verify(e => e.OnCacheCleaned());
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityRefreshedOnWorkspaceExtension()
         {
             // Not supported on InMemoryWorkspace
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityAttachedOnWorkspaceExtension()
         {
             // Arrange
@@ -495,7 +485,7 @@ namespace netdomain.LinqToObjects.Test
             this.ExtensionMock.Verify(e => e.OnEntityAttached(person1));
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityDetachedOnWorkspaceExtension()
         {
             // not supported by the InMemoryUnitOfWork

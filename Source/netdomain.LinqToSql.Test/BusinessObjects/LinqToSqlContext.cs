@@ -20,29 +20,48 @@ namespace netdomain.LinqToSql.Test.BusinessObjects
 {
     using System.Configuration;
     using System.Data.Linq;
+    using System.Data.Linq.Mapping;
+
     using Helpers;
 
+    using netdomain.Abstract.Configuration;
+
+    /// <summary>
+    /// Implements a Linq to sql context.
+    /// </summary>
     public class LinqToSqlContext : DataContext
     {
-        public Table<Person> Persons { get; set; }
-        public Table<Adresse> Adresses { get; set; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="LinqToSqlContext"/> class.
         /// </summary>
-        public LinqToSqlContext()
-            : this(ConfigurationManager.ConnectionStrings["netdomain.LinqToSql.Test.Properties.Settings.LinqTestConnectionString"].ConnectionString, MappingHelper.GetMapping())
+        /// <param name="configurationManager">The configuration manager.</param>
+        public LinqToSqlContext(IConfigurationManager configurationManager)
+            : this(configurationManager.ConnectionStrings["netdomain.LinqToSql.Test.Properties.Settings.LinqTestConnectionString"].ConnectionString, MappingHelper.GetMapping(configurationManager))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the KeySafeContext class.
+        /// Initializes a new instance of the <see cref="LinqToSqlContext"/> class.
         /// </summary>
-        public LinqToSqlContext(string connectionString, System.Data.Linq.Mapping.MappingSource mapping)
+        /// <param name="connectionString">The connection string.</param>
+        /// <param name="mapping">The mapping.</param>
+        public LinqToSqlContext(string connectionString, MappingSource mapping)
             : base(connectionString, mapping)
         {
             this.Persons = GetTable<Person>();
             this.Adresses = GetTable<Adresse>();
         }
+
+        /// <summary>
+        /// Gets or sets the persons.
+        /// </summary>
+        /// <value>The persons.</value>
+        public Table<Person> Persons { get; set; }
+
+        /// <summary>
+        /// Gets or sets the adresses.
+        /// </summary>
+        /// <value>The adresses.</value>
+        public Table<Adresse> Adresses { get; set; }
     }
 }

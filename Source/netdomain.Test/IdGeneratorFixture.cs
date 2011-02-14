@@ -19,16 +19,18 @@
 namespace netdomain
 {
     using System;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     using netdomain.Abstract;
     using netdomain.IdGenerator;
     using netdomain.LinqToObjects;
     using netdomain.Workspace;
 
-    [TestClass]
+    using NUnit.Framework;
+
+    [TestFixture]
     public class IdGeneratorFixture
     {
-        [TestMethod]
+        [Test]
         public void CreateIdentifierForPoco()
         {
             // Arrange
@@ -42,7 +44,7 @@ namespace netdomain
             Assert.AreNotEqual(default(Guid), test.Id);
         }
 
-        [TestMethod]
+        [Test]
         public void DoNotChangeTheIdentifierIfAlreadyAssigned()
         {
             // Arrange

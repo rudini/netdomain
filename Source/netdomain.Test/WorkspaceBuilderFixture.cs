@@ -21,47 +21,20 @@ namespace netdomain
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using netdomain.Abstract;
+
+    using NUnit.Framework;
 
     /// <summary>
     /// Summary description for WorkspaceScopeFixture
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class WorkspaceBuilderFixture
     {
         public static Mock<IWorkspace> WorkspaceMock = new Mock<IWorkspace> { DefaultValue = DefaultValue.Mock };
 
-        /// <summary>
-        /// Gets or sets the test context which provides 
-        /// information about and functionality for the current test run.
-        /// </summary>
-        public TestContext TestContext { get; set; }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
-
-        [TestMethod]
+        [Test]
         public void CanRegisterWorkspaceFactory()
         {
             var workspaceFactoryMock = new Mock<IWorkspaceFactory> { DefaultValue = DefaultValue.Mock };
@@ -72,7 +45,7 @@ namespace netdomain
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
 
-        [TestMethod]
+        [Test]
         public void CanRegisterWorkspaceFactoryByType()
         {
             WorkspaceBuilder.Current.RegisterDefaultWorkspaceFactory<WorkspaceFactory>();
@@ -82,7 +55,7 @@ namespace netdomain
             WorkspaceBuilder.Current.RemoveDefaultWorkspaceFactory();
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(ArgumentException))]
         public void RegisterWorkspaceBuilderToNull()
         {
@@ -90,21 +63,21 @@ namespace netdomain
             Assert.Fail("The RegisterWorkspaceFactory must fail.");
         }
 
-        [TestMethod]
+        [Test]
         public void RegisterExtension()
         {
             WorkspaceBuilder.Current.AddExtension<TestExtension>();
             WorkspaceBuilder.Current.RemoveExtension<TestExtension>();
         }
 
-        [TestMethod]
+        [Test]
         public void RemoveARegisteredExtension()
         {
             WorkspaceBuilder.Current.AddExtension<TestExtension>();
             WorkspaceBuilder.Current.RemoveExtension<TestExtension>();
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void RemoveANotRegisteredExtension()
         {
@@ -112,7 +85,7 @@ namespace netdomain
             Assert.Fail("The test must fail here.");
         }
 
-        [TestMethod]
+        [Test]
         public void GetAllRegisteredExtensionInstances()
         {
             WorkspaceBuilder.Current.AddExtension<TestExtension>();

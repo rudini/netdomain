@@ -19,29 +19,23 @@
 namespace netdomain.LinqToNHibernate.Test
 {
     using System.Collections.Generic;
+    using System.Data.SqlClient;
     using System.Linq;
     using System.Transactions;
     using BusinessObjects;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     using Moq;
     using netdomain.Abstract;
     using netdomain.LinqToNHibernate;
-    using NMock2;
+
+    using NUnit.Framework;
 
     /// <summary>
     /// Test class for LINQ To NHibernate
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class LinqToNHibernateWorkspaceFixture
     {
-        /// <summary>
-        /// Gets or sets the test context which provides
-        /// information about and functionality for the current test run.
-        /// </summary>
-        public TestContext TestContext { get; set; }
-
-        private Mockery mockery;
-
         protected IWorkspace Testee { get; set; }
 
         protected Mock<IWorkspaceBuilder> WorkspaceBuilderMock { get; set; }
@@ -50,25 +44,24 @@ namespace netdomain.LinqToNHibernate.Test
 
         protected Mock<IWorkspaceFactory> WorkspaceFactoryMock { get; set; }
 
-        [TestInitialize]
+        [SetUp]
         public void SetUp()
         {
-            this.mockery = new Mockery();
             this.RegisterExtensions();
             this.Testee = new LinqToNHibernateWorkspace(new LinqToNHibernateContext().GetSession());
         }
 
-        [TestCleanup]
+        [TearDown]
         public void TearDown()
         {
             WorkspaceBuilder.Current = null;
-            this.mockery.Dispose();
             this.Testee.Dispose();
+            SqlConnection.ClearAllPools();
         }
 
         #region derived tests
 
-        [TestMethod]
+        [Test]
         public void AddEntity()
         {
             var name = "Testname";
@@ -87,7 +80,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteEntity()
         {
             var name = "Testname";
@@ -115,7 +108,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UpdateEntity()
         {
             var name = "Testname";
@@ -142,7 +135,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void DetachEntity()
         {
             var name = "Testname";
@@ -166,7 +159,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void AttachEntity()
         {
             var name = "Testname";
@@ -192,7 +185,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UpdateDetachedEntity()
         {
             var name = "Testname";
@@ -218,7 +211,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void AttachEntityToANewWorkspace()
         {
             var name = "Testname";
@@ -248,7 +241,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CreateQuery()
         {
             var name = "Testname";
@@ -266,7 +259,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetByKey()
         {
             var name = "Testname";
@@ -284,7 +277,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetByKeyFromDb()
         {
             var name = "Testname";
@@ -308,7 +301,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void RefreshEntity()
         {
             var name = "Testname";
@@ -336,7 +329,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CleanCache()
         {
             var name = "Testname";
@@ -363,7 +356,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void Include()
         {
             var name = "Testname";
@@ -383,7 +376,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(OptimisticOfflineLockException))]
         public void ConcurencyException()
         {
@@ -424,7 +417,7 @@ namespace netdomain.LinqToNHibernate.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void DisconnectReconnect()
         {
             IConnectionManager manager = this.Testee.ConnectionManager;
@@ -435,8 +428,8 @@ namespace netdomain.LinqToNHibernate.Test
             Assert.IsTrue(manager.IsConnected);
         }
 
-        [TestMethod]
-        [Ignore] // MSDTC must be available
+        [Test]
+        [Ignore("MSDTC must be available")]
         public void TransactionWithExplicitConnectionHandling()
         {
             var name = "Testname";
@@ -471,8 +464,8 @@ namespace netdomain.LinqToNHibernate.Test
             Assert.IsTrue(manager.IsConnected);
         }
 
-        [TestMethod]
-        [Ignore] // MSDTC must be available
+        [Test]
+        [Ignore("MSDTC must be available")]
         public void Transaction()
         {
             var name = "Testname";
@@ -495,7 +488,7 @@ namespace netdomain.LinqToNHibernate.Test
             Assert.IsNull(this.Testee.CreateQuery<Person>().Where(p => p.Name == name).FirstOrDefault());
         }
 
-        [TestMethod]
+        [Test]
         public void IsDirty()
         {
             var name1 = "Testname1";
@@ -541,7 +534,7 @@ namespace netdomain.LinqToNHibernate.Test
             Assert.IsFalse(this.Testee.IsDirty());
         }
 
-        [TestMethod]
+        [Test]
         public void NestedWorkspaceScope()
         {
             // arrange
@@ -574,7 +567,7 @@ namespace netdomain.LinqToNHibernate.Test
             this.WorkspaceFactoryMock.Verify(factory => factory.ReleaseWorkspace(It.IsAny<IWorkspace>()), Times.Once());
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityAddedOnWorkspaceExtension()
         {
             // Arrange
@@ -589,7 +582,7 @@ namespace netdomain.LinqToNHibernate.Test
             // Assert
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityDeletedOnWorkspaceExtension()
         {
             // Arrange
@@ -607,7 +600,7 @@ namespace netdomain.LinqToNHibernate.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityUpdatedOnWorkspaceExtension()
         {
             // Arrange
@@ -621,7 +614,7 @@ namespace netdomain.LinqToNHibernate.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnSubmittingChangesOnWorkspaceExtension()
         {
             // Arrange
@@ -653,7 +646,7 @@ namespace netdomain.LinqToNHibernate.Test
             Assert.AreEqual(this.Testee, this.ExtensionMock.Object.Workspace);
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnCacheCleanedOnWorkspaceExtension()
         {
             // Act
@@ -663,7 +656,7 @@ namespace netdomain.LinqToNHibernate.Test
             this.ExtensionMock.Verify(e => e.OnCacheCleaned());
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityRefreshedOnWorkspaceExtension()
         {
             // Arrange
@@ -683,7 +676,7 @@ namespace netdomain.LinqToNHibernate.Test
             this.ExtensionMock.Verify(e => e.OnEntityRefreshed(person1));
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityAttachedOnWorkspaceExtension()
         {
             // Arrange
@@ -702,7 +695,7 @@ namespace netdomain.LinqToNHibernate.Test
             this.ExtensionMock.Verify(e => e.OnEntityAttached(person1));
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnEntityDetachedOnWorkspaceExtension()
         {
             // Arrange
@@ -723,7 +716,7 @@ namespace netdomain.LinqToNHibernate.Test
             this.ExtensionMock.Verify(e => e.OnEntityDetached(person1));
         }
 
-        [TestMethod]
+        [Test]
         public void CallOnOptimisticOfflineLockExceptionThrownOnWorkspaceExtension()
         {
             // Arrange

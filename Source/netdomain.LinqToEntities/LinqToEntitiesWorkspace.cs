@@ -276,8 +276,7 @@ namespace netdomain.LinqToEntities
             {
                 // Call the ApplyPropertyChanges method to apply changes
                 // from the updated item to the original version.
-                this.context.ApplyPropertyChanges(
-                    key.EntitySetName, entity);
+                this.context.ApplyCurrentValues(key.EntitySetName, entity);
             }
             else
             {
