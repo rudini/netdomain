@@ -89,10 +89,6 @@
     <Compile Include="WorkspaceScopeFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config">
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
@@ -131,6 +127,17 @@
       <Project>{31986B5C-7FBE-4A80-AA3E-E2B19F33BFD4}</Project>
       <Name>netdomain.LinqToObjects</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\App_Data\LinqTest.mdf">
+      <Link>App_Data\LinqTest.mdf</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\App_Data\LinqTest_log.ldf">
+      <Link>App_Data\LinqTest_log.ldf</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>LinqTest.mdf</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

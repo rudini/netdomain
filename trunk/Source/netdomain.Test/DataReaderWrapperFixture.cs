@@ -81,8 +81,8 @@ namespace netdomain
             {
                 logMessageList.Add(new LogMessage { Id = i.ToString(), Message = "Test" + i.ToString() });
             }
-
-            var sqlBulkCopy = new SqlBulkCopy(@"Data Source=(local);Initial Catalog=LINQTEST;Integrated Security=True") { BatchSize = 10000000, DestinationTableName = "Messages" };
+            
+            var sqlBulkCopy = new SqlBulkCopy(@"Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\App_Data\LinqTest.mdf;Integrated Security=True;User Instance=True") { BatchSize = 10000000, DestinationTableName = "Messages" };
             sqlBulkCopy.ColumnMappings.Add("Message", "Message");
             sqlBulkCopy.ColumnMappings.Add("Id", "Id");
 
