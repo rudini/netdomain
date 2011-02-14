@@ -2,12 +2,7 @@
 <project name="netdomain" default="help" basedir="..">
   <property name="ProgramFiles" value="${environment::get-variable('ProgramFiles')}"/>
   <property name="nant.settings.currentframework" value="net-4.0" />
-  <property name="nunit.exe" value="${ProgramFiles}\nunit 2.4.8\bin\nunit-console.exe"/>
-  <property name="msbuild.exe" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" />  
-  <property name="partcover.exe" value="${ProgramFiles}\Gubka Bob\PartCover .NET 2\PartCover.exe" />
   <property name="IdeEnvironment" value="${ProgramFiles}\Microsoft Visual Studio 10.0\Common7\IDE\" />
-  <property name="MSTest.exe" value="${IdeEnvironment}\MSTest.exe" />
-  <property name="SandcastleBuilderGUI.exe" value="${ProgramFiles}\EWSoftware\Sandcastle Help File Builder\SandcastleBuilderGUI.exe" />
   <property name="project.name" value="${project::get-name()}" />
   <property name="project.root" value="${project::get-base-directory()}" />
   <property name="source.dir" value="${project.root}\source" />
@@ -18,7 +13,12 @@
   <property name="results.dir" value="${project.root}\results"/>
   <property name="publish.dir" value="${project.root}\publish"/>
   <property name="unit_test_exclusions" value="FileSystemTests,Database,CruiseControl,Release" />
-
+  <property name="tools.dir" value="${project.root}\tools" />
+  <property name="nunit.exe" value="${tools.dir}\NUnit\bin\net-2.0\nunit-console.exe"/>
+  <property name="msbuild.exe" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" />  
+  <property name="partcover.exe" value="${ProgramFiles}\Gubka Bob\PartCover .NET 2\PartCover.exe" />
+  <property name="SandcastleBuilderGUI.exe" value="${ProgramFiles}\EWSoftware\Sandcastle Help File Builder\SandcastleBuilderGUI.exe" />
+    
   <target name="help" description="Displays the help for the netdomain nant script" >
     <echo message="This is the nant script for the netdomain project of Marco and Roger of bbv." />
     <echo message="It contains 5 targets: compile.debug, compile.release, unittest, integrate, create-helpfiles" />
@@ -27,7 +27,7 @@
   <target name="-clean" >
     <echo message="Cleaning the build environment" />
     <delete dir="${build.dir}" />
-    <delete dir="${results.dir}" />
+    <!--delete dir="${results.dir}" /-->
   </target>
 
   <target name="compile.debug" description="Compiles the project in debug mode" >
@@ -57,23 +57,6 @@
     </msbuild-->
   </target>
 
-  <target name="-run.msunittest" description="Runs the ms unit tests">
-    <mkdir dir="${results.dir}" unless="${directory::exists(results.dir)}" />
-    <exec program="${MSTest.exe}" failonerror="true" basedir="${IdeEnvironment}">
-      <arg value="/testmetadata:${source.dir}\${source.vsmdi}" />
-      <arg value="/resultsfile:${results.dir}\${project.name}.trx" />
-    </exec>
-	
-	<echo message="##teamcity[importData id='mstest' file='${results.dir}\${project.name}.trx" />
-  </target>
-  
-  <target name="msunittest" description="Creates a html report from msunittest" depends="-run.msunittest">
-    <mkdir dir="${results.dir}" unless="${directory::exists(results.dir)}" />
-    <exec program=".\tools\trx2html\trx2html.exe" failonerror="true">
-      <arg value="${results.dir}\${project.name}.trx" />
-    </exec>
-  </target>
-
   <target name="unittest" description="Runs the unit tests" depends="-create.nunit">
     <echo message="Running the unit tests" />
     <mkdir dir="${results.dir}" />
@@ -96,7 +79,7 @@
 
   <target name="integrate" description="Compiles in Release mode and runs the unittests">
     <call target="compile.release" />
-    <call  target="msunittest" />
+    <call  target="unittest" />
   </target>
 
   <target name="coverage-build"
