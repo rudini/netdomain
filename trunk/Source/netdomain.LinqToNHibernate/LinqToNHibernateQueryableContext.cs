@@ -35,7 +35,7 @@ namespace netdomain.LinqToNHibernate
         /// <summary>
         /// The NHIbernate query object
         /// </summary>
-        private readonly INHibernateQueryable<T> query;
+        private readonly IQueryable<T> query;
 
         /// <summary>
         /// The Query context (NHibernate session)
@@ -49,7 +49,7 @@ namespace netdomain.LinqToNHibernate
         internal LinqToNHibernateQueryableContext(ISession session)
         {
             this.context = session;
-            this.query = this.context.Linq<T>();
+            this.query = this.context.Query<T>();
         }
 
         /// <summary>
@@ -117,7 +117,6 @@ namespace netdomain.LinqToNHibernate
         /// <returns>A new <see cref="T:netdomain.Abstract.IQueryableContext`1"/> with the defined query path.</returns>
         public IQueryableContext<T> Include(string path)
         {
-            this.query.QueryOptions.AddExpansion(path);
             return this;
         }
 
@@ -132,7 +131,6 @@ namespace netdomain.LinqToNHibernate
         /// </remarks>
         public IQueryableContext<T> Include(Expression<Func<T, object>> expression)
         {
-            this.query.QueryOptions.AddExpansion(((MemberExpression)expression.Body).Member.Name);
             return this;
         }
     }
