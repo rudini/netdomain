@@ -73,7 +73,7 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
             cfg.SetProperty(Environment.Dialect, "NHibernate.Dialect.MsSql2005Dialect");
             cfg.SetProperty(Environment.CommandTimeout, "60");
             cfg.SetProperty(Environment.QuerySubstitutions, "true 1, false 0, yes 'Y', no 'N'");
-            cfg.SetProperty(Environment.ProxyFactoryFactoryClass, "NHibernate.ByteCode.LinFu.ProxyFactoryFactory, NHibernate.ByteCode.LinFu");
+            cfg.SetProperty(Environment.ProxyFactoryFactoryClass, "NHibernate.ByteCode.Castle.ProxyFactoryFactory, NHibernate.ByteCode.Castle");
 
             //var cfg = new Configuration().Configure();
             cfg.AddAssembly(typeof(Person).Assembly);
