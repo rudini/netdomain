@@ -73,6 +73,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BusinessObjects\Adresse.cs" />
+    <Compile Include="BusinessObjects\AdresseDetail.cs" />
     <Compile Include="BusinessObjects\LinqToNHibernateContext.cs" />
     <Compile Include="BusinessObjects\Person.cs" />
     <Compile Include="LinqToNHibernateWorkspaceFixture.cs" />
@@ -100,7 +101,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\App_Data\LinqTest.mdf">
@@ -112,6 +115,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>LinqTest.mdf</DependentUpon>
     </Content>
+    <EmbeddedResource Include="BusinessObjects\AdresseDetail.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

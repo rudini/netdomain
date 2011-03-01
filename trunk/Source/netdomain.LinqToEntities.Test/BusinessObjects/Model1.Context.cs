@@ -50,6 +50,12 @@ namespace netdomain.LinqToEntities.Test.BusinessObjects
             get { return _person  ?? (_person = CreateObjectSet<PersonPoco>("Person")); }
         }
         private ObjectSet<PersonPoco> _person;
+    
+        public ObjectSet<AdresseDetailPoco> AdresseDetail
+        {
+            get { return _adresseDetail  ?? (_adresseDetail = CreateObjectSet<AdresseDetailPoco>("AdresseDetail")); }
+        }
+        private ObjectSet<AdresseDetailPoco> _adresseDetail;
 
         #endregion
     }

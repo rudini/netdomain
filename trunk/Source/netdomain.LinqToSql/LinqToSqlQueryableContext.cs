@@ -36,7 +36,10 @@ namespace netdomain.LinqToSql
         /// </summary>
         private readonly Table<T> table;
 
-        private readonly DataLoadOptions dataLoadOptions;
+        /// <summary>
+        /// The data load options.
+        /// </summary>
+        private DataLoadOptions dataLoadOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:netdomain.LinqToSql.LinqToSqlQueryableContext`1"/> class.
@@ -45,7 +48,6 @@ namespace netdomain.LinqToSql
         internal LinqToSqlQueryableContext(DataContext dataContext)
         {
             this.table = dataContext.GetTable<T>();
-            this.dataLoadOptions = new DataLoadOptions();
         }
 
         #region IQueryable Members
@@ -79,10 +81,13 @@ namespace netdomain.LinqToSql
         {
             get
             {
-                if (this.dataLoadOptions == null)
+                if (this.dataLoadOptions != null)
                 {
                     this.table.Context.LoadOptions = this.dataLoadOptions;
                 }
+
+                this.dataLoadOptions = null;
+
                 return ((IQueryable)this.table).Provider;
             }
         }
@@ -119,41 +124,22 @@ namespace netdomain.LinqToSql
 
         #endregion
 
-        #region IQueryableContext<T> Members
-
-        /// <summary>
-        /// Specifies the related objects to include in the query results.
-        /// </summary>
-        /// <param name="path">Dot-separated list of related objects to return in the query results.</param>
-        /// <returns>A new <see cref="T:netdomain.Abstract.IQueryableContext`1"/> with the defined query path.</returns>
-        public IQueryableContext<T> Include(string path)
-        {
-            foreach (var item in path.Split('.'))
-            {
-                var param = Expression.Parameter(typeof (T), "c");
-                Expression member = Expression.Property(param, item);
-                var exp = Expression.Lambda(member, param);
-                this.dataLoadOptions.LoadWith(exp);
-            }
-
-            return this;
-        }
-
         /// <summary>
         /// Specifies which sub-objects to retrieve when a query is submitted for an object of type T.
         /// </summary>
         /// <param name="expression">Identifies the field or property to be retrieved.
         /// If the expression does not identify a field or property that represents a one-to-one or one-to-many relationship, an exception is thrown.</param>
-        /// <returns>A new <see cref="T:netdomain.Abstract.IQueryableContext`1"/> with the defined query path.</returns>
         /// <remarks>
         /// You cannot specify the loading of two levels of relationships (for example, Orders.OrderDetails). In these scenarios you must specify two separate Include methods.
         /// </remarks>
-        public IQueryableContext<T> Include(Expression<Func<T, object>> expression)
+        internal void LoadWith(LambdaExpression expression)
         {
-            this.dataLoadOptions.LoadWith(expression);
-            return this;
-        }
+            if (this.dataLoadOptions == null)
+            {
+                this.dataLoadOptions = new DataLoadOptions();
+            }
 
-        #endregion
+            this.dataLoadOptions.LoadWith(expression);
+        }
     }
 }

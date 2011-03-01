@@ -19,11 +19,13 @@
 namespace netdomain.LinqToNHibernate.Test.BusinessObjects
 {
     using System;
+    using System.Collections.Generic;
     using System.Runtime.Serialization;
-    using netdomain.Abstract;
+
     using FluentValidation;
     using FluentValidation.Results;
-    using Iesi.Collections.Generic;
+
+    using netdomain.Abstract;
 
     /// <summary>
     /// A Person entity
@@ -34,7 +36,7 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
         /// <summary>
         /// The persons adresses
         /// </summary>
-        private ISet<Adresse> adressliste = new HashedSet<Adresse>();
+        private IList<Adresse> adressliste = new List<Adresse>();
 
         /// <summary>
         /// Gets or sets the id.
@@ -64,7 +66,7 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
         /// Gets or sets the adresses.
         /// </summary>
         /// <value>The adresses.</value>
-        public virtual ISet<Adresse> Adressliste
+        public virtual IList<Adresse> Adressliste
         {
             get { return this.adressliste; }
             set { this.adressliste = value; }
@@ -91,7 +93,9 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
                                        WithState(e => SeverityLevel.Error),
                               v => v.RuleFor(e => e.Beruf).Length(1, 20).WithMessage("The length of the field Beruf must fall within the range '1'-'20').").
                                        WithState(e => SeverityLevel.Error)
-                          }.Validate(this);
+                          }
+                          
+                          .Validate(this);
 
             foreach (var validationResult in validationResults.Errors)
             {

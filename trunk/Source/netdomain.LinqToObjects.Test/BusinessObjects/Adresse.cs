@@ -19,6 +19,8 @@
 namespace netdomain.LinqToObjects.Test.BusinessObjects
 {
     using System;
+    using System.Collections.Generic;
+
     using FluentValidation;
     using FluentValidation.Results;
     using netdomain.Abstract;
@@ -52,6 +54,12 @@ namespace netdomain.LinqToObjects.Test.BusinessObjects
         /// </summary>
         /// <value>The address name.</value>
         public virtual string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the adressdetails.
+        /// </summary>
+        /// <value>The adressdetails.</value>
+        public virtual IList<AdresseDetail> AdresseDetails { get; set; }
 
         /// <summary>
         /// Validates the specified results.

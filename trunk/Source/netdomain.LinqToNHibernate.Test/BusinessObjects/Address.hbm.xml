@@ -11,5 +11,11 @@
     <version name="Version" column="NVersion" type="Timestamp" generated="never" unsaved-value="null"/>
     <property name="Name" column="Name" length="20" type="string" />
     <many-to-one name="Person" column="PersonID" foreign-key="FK_Adresse_Person"/>
+
+
+      <bag name="AdresseDetails" table="AdresseDetail" cascade="all-delete-orphan" inverse="false" lazy="true">
+          <key column="AdresseId" />
+          <one-to-many class="AdresseDetail"/>
+      </bag>
   </class>
 </hibernate-mapping>

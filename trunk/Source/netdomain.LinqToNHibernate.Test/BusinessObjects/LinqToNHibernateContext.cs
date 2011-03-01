@@ -1,5 +1,5 @@
 ﻿//-------------------------------------------------------------------------------
-// <copyright file="LinqToSqlContext.cs" company="bbv Software Services AG">
+// <copyright file="LinqToNHibernateContext.cs" company="bbv Software Services AG">
 //   Copyright (c) 2010 Roger Rudin, bbv Software Services AG
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");

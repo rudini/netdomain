@@ -36,6 +36,12 @@ namespace netdomain.LinqToEntities.Test.BusinessObjects
             get;
             set;
         }
+    
+        public virtual Nullable<System.DateTime> NVersion
+        {
+            get;
+            set;
+        }
 
         #endregion
         #region Navigation Properties
@@ -54,6 +60,23 @@ namespace netdomain.LinqToEntities.Test.BusinessObjects
             }
         }
         private PersonPoco _person;
+    
+        public virtual ICollection<AdresseDetailPoco> AdresseDetails
+        {
+            get
+            {
+                if (_adresseDetails == null)
+                {
+                    _adresseDetails = new FixupCollection<AdresseDetailPoco>();
+                }
+                return _adresseDetails;
+            }
+            set
+            {
+                _adresseDetails = value;
+            }
+        }
+        private ICollection<AdresseDetailPoco> _adresseDetails;
 
         #endregion
         #region Association Fixup

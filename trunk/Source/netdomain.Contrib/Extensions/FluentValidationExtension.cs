@@ -18,10 +18,10 @@
 
 namespace netdomain.Contrib.Extensions
 {
-    using System.Linq;
     using System.Collections.Generic;
-    using Abstract;
+    using System.Linq;
     using FluentValidation.Results;
+    using netdomain.Abstract;
 
     /// <summary>
     /// Implements a workspace extension for validation purposes using fluent validation.

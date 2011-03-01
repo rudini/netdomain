@@ -23,7 +23,7 @@ using System.Reflection;
 // associated with an assembly.
 [assembly: AssemblyCompany("bbv Software Services AG")]
 [assembly: AssemblyProduct("netdomain")]
-[assembly: AssemblyCopyright("Copyright © 2010")]
+[assembly: AssemblyCopyright("Copyright © 2010 Roger Rudin, bbv Software Services AG")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

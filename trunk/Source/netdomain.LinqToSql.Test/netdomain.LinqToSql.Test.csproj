@@ -64,6 +64,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BusinessObjects\Adresse.cs" />
+    <Compile Include="BusinessObjects\AdresseDetail.cs" />
     <Compile Include="BusinessObjects\LinqToSqlContext.cs" />
     <Compile Include="BusinessObjects\Person.cs" />
     <Compile Include="LinqToSqlWorkspaceFixture.cs" />
