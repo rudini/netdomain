@@ -68,6 +68,9 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BusinessObjects\Adresse.cs" />
+    <Compile Include="BusinessObjects\AdresseDetailPoco.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="BusinessObjects\AdressePoco.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

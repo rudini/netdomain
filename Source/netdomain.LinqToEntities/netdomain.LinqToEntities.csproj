@@ -58,6 +58,8 @@
     <Compile Include="LinqToEntitiesQueryableContext.cs" />
     <Compile Include="LinqToEntitiesWorkspace.cs" />
     <Compile Include="ObjectContextExtender.cs" />
+    <Compile Include="PropertyPathVisitor.cs" />
+    <Compile Include="QueryableContextExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,7 @@ namespace netdomain.LinqToEntities.Test.Repository
     {
         public PersonRepository(IWorkspace context) : base(context)
         {
-            this.Query.Include("Addressliste");
+            this.Query.Include(p => p.Adressliste);
         }
 
         public PersonPoco FindPerson(string name)

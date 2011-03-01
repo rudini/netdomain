@@ -34,7 +34,7 @@ namespace netdomain.LinqToObjects.Test.Repository
         public PersonRepository(IWorkspace context)
             : base(context)
         {
-            this.Query.Include("Addressliste");
+            this.Query.Include(p => p.Adressliste);
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
-﻿//-------------------------------------------------------------------------------
-// <copyright file="IQueryableContext.cs" company="bbv Software Services AG">
+//-------------------------------------------------------------------------------
+// <copyright file="AdresseDetail.cs" company="bbv Software Services AG">
 //   Copyright (c) 2011 Roger Rudin, bbv Software Services AG
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,15 +16,18 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace netdomain.Abstract
+namespace netdomain.LinqToNHibernate.Test.BusinessObjects
 {
-    using System.Linq;
-
-    /// <summary>
-    /// Defines an interface of a querable context of a particular type.
-    /// </summary>
-    /// <typeparam name="T">The type of the <see cref="T:netdomain.Abstract.IQueryableContext`1"/></typeparam>
-    public interface IQueryableContext<T> : IQueryable<T>
+    public class AdresseDetail
     {
+        public virtual int Id { get; set; }
+
+        public virtual System.Nullable<int> AdresseId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the person ID.
+        /// </summary>
+        /// <value>The person ID.</value>
+        public virtual Adresse Adresse { get; set; }
     }
 }

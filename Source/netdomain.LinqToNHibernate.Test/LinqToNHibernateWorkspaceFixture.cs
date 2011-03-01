@@ -22,11 +22,14 @@ namespace netdomain.LinqToNHibernate.Test
     using System.Data.SqlClient;
     using System.Linq;
     using System.Transactions;
-    using BusinessObjects;
 
     using Moq;
+
     using netdomain.Abstract;
     using netdomain.LinqToNHibernate;
+    using netdomain.LinqToNHibernate.Test.BusinessObjects;
+
+    using NHibernate.Linq;
 
     using NUnit.Framework;
 
@@ -370,7 +373,9 @@ namespace netdomain.LinqToNHibernate.Test
 
                 this.Testee.Clean();
 
-                var fetchedPerson2 = this.Testee.CreateQuery<Person>().Include("Adressliste").Where(p => p.Name == name).First<Person>();
+                var fetchedPerson2 =
+                    this.Testee.CreateQuery<Person>().Where(p => p.Name == name).FetchMany(p => p.Adressliste).ThenFetch(a => a.AdresseDetails).First();
+
                 Assert.IsFalse(fetchedPerson2.Adressliste.Count == 0, "The Adressliste count shall not be 0");
                 Assert.IsNotNull(fetchedPerson2.Adressliste.ElementAt(0), "The index 0 of Adressliste count shall not be null");
             }

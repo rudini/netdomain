@@ -21,6 +21,7 @@ namespace netdomain.LinqToNHibernate.Test.Repository
     using System.Linq;
     using netdomain.Abstract;
     using netdomain.LinqToNHibernate.Test.BusinessObjects;
+    using NHibernate.Linq;
 
     /// <summary>
     /// Repository for Person objects
@@ -34,7 +35,7 @@ namespace netdomain.LinqToNHibernate.Test.Repository
         public PersonRepository(IWorkspace context)
             : base(context)
         {
-            this.Query.Include("Addressliste");
+            this.Query.FetchMany(p => p.Adressliste);
         }
 
         /// <summary>

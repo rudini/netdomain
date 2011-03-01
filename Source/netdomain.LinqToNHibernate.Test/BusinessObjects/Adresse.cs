@@ -1,5 +1,5 @@
 ﻿//-------------------------------------------------------------------------------
-// <copyright file="Address.cs" company="bbv Software Services AG">
+// <copyright file="Adresse.cs" company="bbv Software Services AG">
 //   Copyright (c) 2010 Roger Rudin, bbv Software Services AG
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,10 +19,13 @@
 namespace netdomain.LinqToNHibernate.Test.BusinessObjects
 {
     using System;
+    using System.Collections.Generic;
     using System.Runtime.Serialization;
-    using netdomain.Abstract;
+
     using FluentValidation;
     using FluentValidation.Results;
+
+    using netdomain.Abstract;
 
     /// <summary>
     /// Address for a person
@@ -30,6 +33,11 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
     [DataContract]
     public class Adresse 
     {
+        /// <summary>
+        /// The persons adresses
+        /// </summary>
+        private IList<AdresseDetail> adressdetails = new List<AdresseDetail>();
+
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
@@ -55,6 +63,16 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
         public virtual string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the adressdetails.
+        /// </summary>
+        /// <value>The adressdetails.</value>
+        public virtual IList<AdresseDetail> AdresseDetails
+        {
+            get { return this.adressdetails; }
+            set { this.adressdetails = value; }
+        }
+
+        /// <summary>
         /// Validates the specified results.
         /// </summary>
         /// <param name="result">The results.</param>
@@ -64,7 +82,9 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
                           {
                               v => v.RuleFor(e => e.Name).Length(1, 20).WithMessage("The length of the field Name must fall within the range '1'-'20').").
                                        WithState(e => SeverityLevel.Error),
-                          }.Validate(this);
+                          } 
+
+                          .Validate(this);
 
             foreach (var validationResult in validationResults.Errors)
             {

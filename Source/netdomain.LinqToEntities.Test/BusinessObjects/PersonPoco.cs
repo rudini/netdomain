@@ -42,6 +42,12 @@ namespace netdomain.LinqToEntities.Test.BusinessObjects
             get;
             set;
         }
+    
+        public virtual Nullable<System.DateTime> NVersion
+        {
+            get;
+            set;
+        }
 
         #endregion
         #region Navigation Properties

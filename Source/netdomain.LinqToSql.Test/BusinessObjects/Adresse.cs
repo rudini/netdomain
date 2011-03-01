@@ -44,6 +44,10 @@ namespace netdomain.LinqToSql.Test.BusinessObjects
 
         private EntityRef<Person> person;
 
+        private EntitySet<AdresseDetail> adressedetails;
+
+        private bool serializing;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Adresse"/> class.
         /// </summary>
@@ -180,6 +184,27 @@ namespace netdomain.LinqToSql.Test.BusinessObjects
         }
 
         /// <summary>
+        /// Gets or sets the adressliste.
+        /// </summary>
+        /// <value>The adressliste.</value>
+        [DataMember(Order = 6, EmitDefaultValue = false)]
+        public EntitySet<AdresseDetail> AdresseDetails
+        {
+            get
+            {
+                if (this.serializing && (this.adressedetails.HasLoadedOrAssignedValues == false))
+                {
+                    return null;
+                }
+                return this.adressedetails;
+            }
+            set
+            {
+                this.adressedetails.Assign(value);
+            }
+        }
+
+        /// <summary>
         /// Occurs when a property value is changing.
         /// </summary>
         public event PropertyChangingEventHandler PropertyChanging;
@@ -218,7 +243,25 @@ namespace netdomain.LinqToSql.Test.BusinessObjects
         private void Initialize()
         {
             this.person = default(EntityRef<Person>);
+            this.adressedetails = new EntitySet<AdresseDetail>(new Action<AdresseDetail>(this.AttachAdresseDetails), new Action<AdresseDetail>(this.DetachAdresseDetails));
         }
+
+        private void AttachAdresseDetails(AdresseDetail entity)
+        {
+            this.SendPropertyChanging();
+            entity.Adresse = this;
+        }
+
+        /// <summary>
+        /// Detaches the adresses.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        private void DetachAdresseDetails(AdresseDetail entity)
+        {
+            this.SendPropertyChanging();
+            entity.Adresse = null;
+        }
+
 
         /// <summary>
         /// Called when [deserializing].
@@ -229,6 +272,28 @@ namespace netdomain.LinqToSql.Test.BusinessObjects
         public void OnDeserializing(StreamingContext context)
         {
             this.Initialize();
+        }
+
+        /// <summary>
+        /// Called when [serializing].
+        /// </summary>
+        /// <param name="context">The context.</param>
+        [OnSerializing]
+        [EditorBrowsableAttribute(EditorBrowsableState.Never)]
+        public void OnSerializing(StreamingContext context)
+        {
+            this.serializing = true;
+        }
+
+        /// <summary>
+        /// Called when [serialized].
+        /// </summary>
+        /// <param name="context">The context.</param>
+        [OnSerialized]
+        [EditorBrowsableAttribute(EditorBrowsableState.Never)]
+        public void OnSerialized(StreamingContext context)
+        {
+            this.serializing = false;
         }
 
         /// <summary>

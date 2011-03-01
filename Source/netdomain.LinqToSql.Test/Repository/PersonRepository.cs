@@ -33,7 +33,7 @@ namespace netdomain.LinqToSql.Test.Repository
         /// <param name="context">The context.</param>
         public PersonRepository(IWorkspace context) : base(context)
         {
-            this.Query.Include("Adressliste");
+            this.Query.Include(p => p.Adressliste);
         }
 
         /// <summary>

@@ -3,7 +3,7 @@
                    namespace="netdomain.LinqToNHibernate.Test.BusinessObjects"
                    assembly="netdomain.LinqToNHibernate.Test">
 
-  <class name="Person" table="person" optimistic-lock="version">
+  <class name="Person" table="Person" optimistic-lock="version">
     <id name="Id" column="id" type="Int32" unsaved-value="0">
       <generator class="identity" />
     </id>
@@ -12,9 +12,9 @@
     <property name="Name" column="Name" length="10" type="string" />
     <property name="Beruf" column="Beruf" length="20" type="string" />
 
-    <set name="Adressliste" table="Adresse" cascade="all-delete-orphan" lazy="true">
+    <bag name="Adressliste" table="Adresse" cascade="all-delete-orphan" inverse="false" lazy="true">
       <key column="PersonID" />
       <one-to-many class="Adresse"/>
-    </set>
+    </bag>
   </class>
 </hibernate-mapping>

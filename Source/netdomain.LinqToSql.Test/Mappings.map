@@ -1,11 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database Name="linqtest" xmlns="http://schemas.microsoft.com/linqtosql/mapping/2007">
+    <Table Name="dbo.AdresseDetail" Member="AdresseDetail">
+        <Type Name="netdomain.LinqToSql.Test.BusinessObjects.AdresseDetail">
+            <Column Name="Id" Member="Id" Storage="id" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" CanBeNull="false" />
+            <Column Name="AdresseId" Member="AdresseId" DbType="int" CanBeNull="true" />
+            <Association Name="FK_AdresseDetail_Adresse" Member="Adresse" Storage="adresse" ThisKey="AdresseId" OtherKey="Id" IsForeignKey="true" DeleteRule="CASCADE"/>
+        </Type>
+    </Table>
   <Table Name="dbo.Adresse" Member="Adressliste">
     <Type Name="netdomain.LinqToSql.Test.BusinessObjects.Adresse">
       <Column Name="Id" Member="Id" Storage="id" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
       <Column Name="Version" Member="Version" DbType="rowversion NOT NULL" CanBeNull="false" IsDbGenerated="true" IsVersion="true" AutoSync="Always" />
       <Column Name="Name" Member="Name" Storage="name" DbType="NVarChar(20)" />
       <Column Name="PersonID" Member="PersonId" Storage="personId" DbType="Int" />
+      <Association Name="FK_AdresseDetail_Adresse" Member="AdresseDetails" Storage="adressedetails" ThisKey="Id" OtherKey="AdresseId" DeleteRule="Cascade" />
       <Association Name="FK_Adresse_Person" Member="Person" Storage="person" ThisKey="PersonId" OtherKey="Id" IsForeignKey="true"/>
     </Type>
   </Table>

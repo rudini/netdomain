@@ -3,13 +3,18 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="netdomain.DomainData.Test.LinqToEntities.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
-        <EntityContainer Name="DDDAndLinqDomainDataLinqToEntitiesStoreContainer">
-          <EntitySet Name="Adresse" EntityType="netdomain.DomainData.Test.LinqToEntities.Store.Adresse" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="Person" EntityType="netdomain.DomainData.Test.LinqToEntities.Store.Person" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+    <Schema Namespace="netdomain.DomainData.Test.LinqToEntities.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="netdomainDomainDataTestLinqToEntitiesStoreContainer">
+          <EntitySet Name="Adresse" EntityType="netdomain.DomainData.Test.LinqToEntities.Store.Adresse" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AdresseDetail" EntityType="netdomain.DomainData.Test.LinqToEntities.Store.AdresseDetail" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Person" EntityType="netdomain.DomainData.Test.LinqToEntities.Store.Person" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="FK_Adresse_Person" Association="netdomain.DomainData.Test.LinqToEntities.Store.FK_Adresse_Person">
             <End Role="Person" EntitySet="Person" />
             <End Role="Adresse" EntitySet="Adresse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdresseDetail_Adresse" Association="netdomain.DomainData.Test.LinqToEntities.Store.FK_AdresseDetail_Adresse">
+            <End Role="Adresse" EntitySet="Adresse" />
+            <End Role="AdresseDetail" EntitySet="AdresseDetail" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Adresse">
@@ -17,18 +22,27 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Version" Type="timestamp" Nullable="true" StoreGeneratedPattern="Computed" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" />
           <Property Name="Name" Type="nvarchar" MaxLength="20" />
           <Property Name="PersonID" Type="int" />
+          <Property Name="NVersion" Type="datetime" />
+        </EntityType>
+        <EntityType Name="AdresseDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="AdresseId" Type="int" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Version" Type="timestamp" Nullable="true" StoreGeneratedPattern="Computed" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" />
           <Property Name="Name" Type="nvarchar" MaxLength="10" />
           <Property Name="Beruf" Type="nvarchar" MaxLength="20" />
+          <Property Name="NVersion" Type="datetime" />
         </EntityType>
         <Association Name="FK_Adresse_Person">
           <End Role="Person" Type="netdomain.DomainData.Test.LinqToEntities.Store.Person" Multiplicity="0..1">
@@ -44,8 +58,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:StorageModels>
+        <Association Name="FK_AdresseDetail_Adresse">
+          <End Role="Adresse" Type="netdomain.DomainData.Test.LinqToEntities.Store.Adresse" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AdresseDetail" Type="netdomain.DomainData.Test.LinqToEntities.Store.AdresseDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Adresse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AdresseDetail">
+              <PropertyRef Name="AdresseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="netdomain.DomainData.Test.LinqToEntities" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -56,6 +83,11 @@
             <End Role="Person" EntitySet="Person" />
             <End Role="Adresse" EntitySet="Adresse" />
           </AssociationSet>
+          <EntitySet Name="AdresseDetail" EntityType="netdomain.DomainData.Test.LinqToEntities.AdresseDetailPoco" />
+          <AssociationSet Name="FK_AdresseDetail_Adresse" Association="netdomain.DomainData.Test.LinqToEntities.FK_AdresseDetail_Adresse">
+            <End Role="AdressePoco" EntitySet="Adresse" />
+            <End Role="AdresseDetail" EntitySet="AdresseDetail" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AdressePoco">
           <Key>
@@ -65,6 +97,8 @@
           <Property Name="Name" Type="String" MaxLength="20" Unicode="true" FixedLength="true" />
           <NavigationProperty Name="Person" Relationship="netdomain.DomainData.Test.LinqToEntities.FK_Adresse_Person" FromRole="Adresse" ToRole="Person" />
           <Property Name="Version" Type="Binary" Nullable="true" ConcurrencyMode="Fixed" />
+          <Property Type="DateTime" Name="NVersion" />
+          <NavigationProperty Name="AdresseDetails" Relationship="netdomain.DomainData.Test.LinqToEntities.FK_AdresseDetail_Adresse" FromRole="AdressePoco" ToRole="AdresseDetail" />
         </EntityType>
         <EntityType Name="PersonPoco">
           <Key>
@@ -75,6 +109,7 @@
           <Property Name="Beruf" Type="String" MaxLength="20" Unicode="true" FixedLength="true" />
           <NavigationProperty Name="Adressliste" Relationship="netdomain.DomainData.Test.LinqToEntities.FK_Adresse_Person" FromRole="Person" ToRole="Adresse" />
           <Property Name="Version" Type="Binary" Nullable="true" ConcurrencyMode="Fixed" />
+          <Property Type="DateTime" Name="NVersion" />
         </EntityType>
         <Association Name="FK_Adresse_Person">
           <End Role="Person" Type="netdomain.DomainData.Test.LinqToEntities.PersonPoco" Multiplicity="0..1">
@@ -82,15 +117,26 @@
           </End>
           <End Role="Adresse" Type="netdomain.DomainData.Test.LinqToEntities.AdressePoco" Multiplicity="*" />
         </Association>
+        <EntityType Name="AdresseDetailPoco">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AdresseDetail_Adresse">
+          <End Type="netdomain.DomainData.Test.LinqToEntities.AdressePoco" Role="AdressePoco" Multiplicity="0..1" />
+          <End Type="netdomain.DomainData.Test.LinqToEntities.AdresseDetailPoco" Role="AdresseDetail" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="DDDAndLinqDomainDataLinqToEntitiesStoreContainer" CdmEntityContainer="LinqTestEntities">
+        <EntityContainerMapping StorageEntityContainer="netdomainDomainDataTestLinqToEntitiesStoreContainer" CdmEntityContainer="LinqTestEntities">
           <EntitySetMapping Name="Adresse">
             <EntityTypeMapping TypeName="IsTypeOf(netdomain.DomainData.Test.LinqToEntities.AdressePoco)">
               <MappingFragment StoreEntitySet="Adresse">
+                <ScalarProperty Name="NVersion" ColumnName="NVersion" />
                 <ScalarProperty Name="Version" ColumnName="Version" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -100,6 +146,7 @@
           <EntitySetMapping Name="Person">
             <EntityTypeMapping TypeName="IsTypeOf(netdomain.DomainData.Test.LinqToEntities.PersonPoco)">
               <MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="NVersion" ColumnName="NVersion" />
                 <ScalarProperty Name="Version" ColumnName="Version" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -116,6 +163,22 @@
             </EndProperty>
             <Condition ColumnName="PersonID" IsNull="false" />
           </AssociationSetMapping>
+          <EntitySetMapping Name="AdresseDetail">
+            <EntityTypeMapping TypeName="netdomain.DomainData.Test.LinqToEntities.AdresseDetailPoco">
+              <MappingFragment StoreEntitySet="AdresseDetail">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FK_AdresseDetail_Adresse" TypeName="netdomain.DomainData.Test.LinqToEntities.FK_AdresseDetail_Adresse" StoreEntitySet="AdresseDetail">
+            <EndProperty Name="AdresseDetail">
+              <ScalarProperty Name="Id" ColumnName="Id" />
+            </EndProperty>
+            <EndProperty Name="AdressePoco">
+              <ScalarProperty Name="Id" ColumnName="AdresseId" />
+            </EndProperty>
+            <Condition ColumnName="AdresseId" IsNull="false" />
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -129,6 +192,8 @@
     <edmx:Options>
       <DesignerInfoPropertySet xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
       </DesignerInfoPropertySet>
     </edmx:Options>
     <edmx:Diagrams>
@@ -136,8 +201,13 @@
         <EntityTypeShape EntityType="netdomain.DomainData.Test.LinqToEntities.AdressePoco" PointX="3" PointY="1" Width="1.5" Height="1.4279589843749998" IsExpanded="true" />
         <EntityTypeShape EntityType="netdomain.DomainData.Test.LinqToEntities.PersonPoco" PointX="0.75" PointY="0.875" Width="1.5" Height="1.5923063151041672" IsExpanded="true" />
         <AssociationConnector Association="netdomain.DomainData.Test.LinqToEntities.FK_Adresse_Person" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="1.7139794921874998" />
-          <ConnectorPoint PointX="3" PointY="1.7139794921874998" />
+          <ConnectorPoint PointX="2.25" PointY="2.0237939453125" />
+          <ConnectorPoint PointX="3" PointY="2.0237939453125" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="netdomain.DomainData.Test.LinqToEntities.AdresseDetailPoco" Width="1.75" PointX="5.25" PointY="1.375" Height="1.211080729166667" />
+        <AssociationConnector Association="netdomain.DomainData.Test.LinqToEntities.FK_AdresseDetail_Adresse" >
+          <ConnectorPoint PointX="4.5" PointY="1.9805403645833335" />
+          <ConnectorPoint PointX="5.25" PointY="1.9805403645833335" />
         </AssociationConnector>
       </Diagram>
     </edmx:Diagrams>

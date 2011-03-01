@@ -265,12 +265,11 @@ namespace netdomain.LinqToObjects.Test
 
             this.Testee.Clean();
 
-            var fetchedPerson2 = this.Testee.CreateQuery<Person>().Include("Adresse").Where(p => p.Name == name).First<Person>();
+            var query = this.Testee.CreateQuery<Person>().Include(p => p.Adressliste.SelectMany(a => a.AdresseDetails));
+
+            var fetchedPerson2 = query.Where(p => p.Name == name).First();
             Assert.IsFalse(fetchedPerson2.Adressliste.Count == 0, "The Adressliste count shall not be 0");
             Assert.IsNotNull(fetchedPerson2.Adressliste.ElementAt(0), "The index 0 of Adressliste count shall not be null");
-
-            this.Testee.Delete(fetchedPerson2);
-            this.Testee.SubmitChanges();
         }
 
         [Test]

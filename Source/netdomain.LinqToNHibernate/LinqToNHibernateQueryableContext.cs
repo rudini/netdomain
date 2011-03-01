@@ -22,6 +22,7 @@ namespace netdomain.LinqToNHibernate
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+
     using netdomain.Abstract;
     using NHibernate;
     using NHibernate.Linq;
@@ -108,30 +109,6 @@ namespace netdomain.LinqToNHibernate
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.query.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Specifies the related objects to include in the query results.
-        /// </summary>
-        /// <param name="path">Dot-separated list of related objects to return in the query results.</param>
-        /// <returns>A new <see cref="T:netdomain.Abstract.IQueryableContext`1"/> with the defined query path.</returns>
-        public IQueryableContext<T> Include(string path)
-        {
-            return this;
-        }
-
-        /// <summary>
-        /// Specifies which sub-objects to retrieve when a query is submitted for an object of type T.
-        /// </summary>
-        /// <param name="expression">Identifies the field or property to be retrieved.
-        /// If the expression does not identify a field or property that represents a one-to-one or one-to-many relationship, an exception is thrown.</param>
-        /// <returns>A new <see cref="T:netdomain.Abstract.IQueryableContext`1"/> with the defined query path.</returns>
-        /// <remarks>
-        /// You cannot specify the loading of two levels of relationships (for example, Orders.OrderDetails). In these scenarios you must specify two separate Include methods.
-        /// </remarks>
-        public IQueryableContext<T> Include(Expression<Func<T, object>> expression)
-        {
-            return this;
         }
     }
 }
