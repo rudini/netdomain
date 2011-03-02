@@ -20,6 +20,7 @@
 namespace netdomain.LinqToSql
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -46,10 +47,41 @@ namespace netdomain.LinqToSql
                 new PropertyAccessorVisitor()
                     .GetPropertyAccessorExpressions(selector)
                     .ToList()
-                    .ForEach(specificQueriableType.LoadWith);
+                    .CatchedForEach(specificQueriableType.LoadWith);
             }
 
             return queryableContext;
+        }
+
+        /// <summary>
+        /// Enumerate through the elements in a catch block.
+        /// </summary>
+        /// <typeparam name="T">the type of the list.</typeparam>
+        /// <param name="list">The list to enumerate.</param>
+        /// <param name="action">The action.</param>
+        public static void CatchedForEach<T>(this List<T> list, Action<T> action)
+        {
+            if (list == null)
+            {
+                throw new ArgumentNullException("list");
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException("action");
+            }
+
+            foreach (var t in list)
+            {
+                try
+                {
+                    action(t);
+                }
+                catch
+                {
+                    // do nothing
+                }
+            }
         }
     }
 }
