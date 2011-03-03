@@ -77,7 +77,7 @@ namespace netdomain.LinqToSql
                 {
                     action(t);
                 }
-                catch
+                catch (ArgumentException)
                 {
                     // do nothing
                 }
