@@ -1,4 +1,3 @@
-
 = Introduction =
 
 netdomain supports lambda expression to define the aggregate.
@@ -22,7 +21,6 @@ Here is an example how to eager load all entities of the Northwind database in o
 
             // Act
             var query = ws.CreateQuery<Order>()
-                 .Include(o => o.Order_Details)
                  .Include(o => o.Employee)
                  .Include(o => o.Shipper)
                  .Include(o => o.Order_Details.Select(det => det.Product).Select(p => p.Category))
@@ -40,7 +38,7 @@ Here is an example how to eager load all entities of the Northwind database in o
         }
 }}}
 
-NHibernate uses his own syntax to eager load data. All .Fetch and .FetchMany methods must be called at the end of the linq query. 
+NHibernate uses its own syntax to eager load data. All .Fetch and .FetchMany methods must be called at the end of the linq query. 
 
 {{{
         var fetchedPerson2 =
