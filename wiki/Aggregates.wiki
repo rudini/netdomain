@@ -16,8 +16,8 @@ Here is an example how to eager load all entities of the Northwind database in o
             // Arrange
             var context = new NORTHWNDEntities { ContextOptions = { LazyLoadingEnabled = false } };
             IWorkspace ws = new LinqToEntitiesWorkspace(context);
-            // var context = new NORTHWNDEntities { ContextOptions = { LazyLoadingEnabled = false } };
-            // IWorkspace ws = new LinqToEntitiesWorkspace(context);
+            // var context = new DataClasses1DataContext { DeferredLoadingEnabled = false };
+            // IWorkspace ws = new LinqToSqlWorkspace(context);
 
             // Act
             var query = ws.CreateQuery<Order>()
