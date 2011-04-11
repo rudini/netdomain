@@ -18,6 +18,7 @@
 
 namespace netdomain
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using Moq;
@@ -37,7 +38,7 @@ namespace netdomain
     {
         private Mock<IWorkspace> workspaceMock;
         private InMemoryQueryableContext<Person> inMemoryQueryContext;
-        private PersonRepository testee;
+        private IPersonRepository testee;
 
         [SetUp]
         public void SetUp()
@@ -62,7 +63,7 @@ namespace netdomain
             var person = new Person();
 
             // Act
-            this.testee.Add(person);
+            this.testee.AddPerson(person);
 
             // Assert
             this.workspaceMock.Verify(w => w.Add(person));
@@ -75,7 +76,7 @@ namespace netdomain
             var person = new Person();
 
             // Act
-            this.testee.Delete(person);
+            this.testee.DeletePerson(person);
 
             // Assert
             this.workspaceMock.Verify(w => w.Delete(person));
@@ -88,7 +89,7 @@ namespace netdomain
             var person = new Person();
 
             // Act
-            this.testee.Update(person);
+            this.testee.UpdatePerson(person);
 
             // Assert
             this.workspaceMock.Verify(w => w.Update(person));
@@ -116,10 +117,41 @@ namespace netdomain
         }
     }
 
-    public class PersonRepository : Repository<Person>
+    public interface IPersonRepository
+    {
+        void AddPerson(Person person);
+
+        void DeletePerson(Person item);
+
+        void UpdatePerson(Person item);
+
+        new IEnumerable<Person> FindBySpecification(ISpecification<Person> spec);
+    }
+
+    public class PersonRepository : Repository<Person>, IPersonRepository
     {
         public PersonRepository(IWorkspace workspace) : base(workspace)
         {
+        }
+
+        public void AddPerson(Person person)
+        {
+            this.Add(person);
+        }
+
+        public void DeletePerson(Person item)
+        {
+            this.Delete(item);
+        }
+
+        public void UpdatePerson(Person item)
+        {
+            this.Update(item);
+        }
+
+        public new IEnumerable<Person> FindBySpecification(ISpecification<Person> spec)
+        {
+            return base.FindBySpecification(spec);
         }
     }
 }

@@ -89,7 +89,6 @@
     <Compile Include="IAuditable.cs" />
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="IQueryableContext.cs" />
-    <Compile Include="IRepository.cs" />
     <Compile Include="ISpecification.cs" />
     <Compile Include="ITable.cs" />
     <Compile Include="IValidatable.cs" />

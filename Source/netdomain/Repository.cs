@@ -26,7 +26,7 @@ namespace netdomain
     /// Implements a base class of a repository based on the DDD pattern by Eric Evans.
     /// </summary>
     /// <typeparam name="T">The type of the repository.</typeparam>
-    public abstract class Repository<T> : IRepository<T> where T : class
+    public abstract class Repository<T> where T : class
     {
         /// <summary>
         /// The context which the repository uses.
@@ -62,7 +62,7 @@ namespace netdomain
         /// Adds the specified item to the <see cref="IWorkspace"/>.
         /// </summary>
         /// <param name="item">The item to add.</param>
-        public void Add(T item)
+        protected virtual void Add(T item)
         {
             this.context.Add(item);
         }
@@ -71,7 +71,7 @@ namespace netdomain
         /// Deletes the specified item to the <see cref="IWorkspace"/>.
         /// </summary>
         /// <param name="item">The item to delete.</param>
-        public void Delete(T item)
+        protected virtual void Delete(T item)
         {
             this.context.Delete(item);
         }
@@ -80,7 +80,7 @@ namespace netdomain
         /// Updates the specified item to the <see cref="IWorkspace"/>.
         /// </summary>
         /// <param name="item">The item to update.</param>
-        public void Update(T item)
+        protected virtual void Update(T item)
         {
             this.context.Update(item);
         }
@@ -92,7 +92,7 @@ namespace netdomain
         /// <returns>
         /// An enumerable of type <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
         /// </returns>
-        public virtual IEnumerable<T> FindBySpecification(ISpecification<T> specification)
+        protected virtual IEnumerable<T> FindBySpecification(ISpecification<T> specification)
         {
             return this.query.Where(specification.Predicate);
         }
@@ -101,7 +101,7 @@ namespace netdomain
         /// Creates an <see cref="T:netdomain.Abstract.IQueryableContext`1"/> to query on.
         /// </summary>
         /// <returns>A <see cref="T:netdomain.Abstract.IQueryableContext`1"/></returns>
-        protected IQueryableContext<T> CreateQuery()
+        protected virtual IQueryableContext<T> CreateQuery()
         {
             return this.query;
         }

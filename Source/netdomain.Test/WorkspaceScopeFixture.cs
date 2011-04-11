@@ -87,8 +87,8 @@ namespace netdomain
 
             using (var scope = new WorkspaceScope(workspaceMock.Object))
             {
-                var repository = new PersonRepository(scope.CurrentWorkspace);
-                repository.Add(person);
+                IPersonRepository repository = new PersonRepository(scope.CurrentWorkspace);
+                repository.AddPerson(person);
                 scope.SubmitChanges();
             }
 
