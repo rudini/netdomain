@@ -125,7 +125,7 @@ namespace netdomain
 
         void UpdatePerson(Person item);
 
-        new IEnumerable<Person> FindBySpecification(ISpecification<Person> spec);
+        IEnumerable<Person> FindBySpecification(ISpecification<Person> spec);
     }
 
     public class PersonRepository : Repository<Person>, IPersonRepository
