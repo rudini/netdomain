@@ -59,7 +59,6 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DbContextExtender.cs" />
-    <Compile Include="LinqToDbContextWorkspace.cs" />
     <Compile Include="LinqToEntitiesQueryableContext.cs" />
     <Compile Include="LinqToEntitiesWorkspace.cs" />
     <Compile Include="ObjectContextExtender.cs" />
