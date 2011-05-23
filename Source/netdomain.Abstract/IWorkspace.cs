@@ -19,6 +19,7 @@
 namespace netdomain.Abstract
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Defines an interface to implement a Unit of Work workspace
@@ -123,6 +124,16 @@ namespace netdomain.Abstract
         /// <typeparam name="T">The type of the <see cref="T:netdomain.Abstract.IQueryableContext`1"/>.</typeparam>
         /// <returns>An <see cref="T:netdomain.Abstract.IQueryableContext`1"/> of the specified type.</returns>
         IQueryableContext<T> CreateQuery<T>() where T : class;
+
+        /// <summary>
+        /// Execute the sequence returning query against the database server.
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="T">The element type of the result sequence.</typeparam> 
+        /// <param name="commandText">The query specified in the server's native query language.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param> 
+        /// <returns>An IEnumerable sequence of objects.</returns> 
+        IEnumerable<T> CreateSqlQuery<T>(string commandText, params object[] parameters) where T : class;
     }
 
     /// <summary>

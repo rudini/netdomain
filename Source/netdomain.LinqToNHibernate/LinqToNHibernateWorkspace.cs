@@ -22,6 +22,7 @@ namespace netdomain.LinqToNHibernate
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
+
     using netdomain;
     using netdomain.Abstract;
     using NHibernate;
@@ -293,6 +294,22 @@ namespace netdomain.LinqToNHibernate
         public IQueryableContext<T> CreateQuery<T>() where T : class
         {
             return new LinqToNHibernateQueryableContext<T>(this.context);
+        }
+
+        /// <summary>
+        /// Execute the sequence returning query against the database server.
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="T">The element type of the result sequence.</typeparam> 
+        /// <param name="commandText">The query specified in the server's native query language.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param> 
+        /// <returns>An IEnumerable sequence of objects.</returns> 
+        /// <remarks>The use of parameter does not take care of sql injection problems.</remarks>
+        public IEnumerable<T> CreateSqlQuery<T>(string commandText, params object[] parameters) where T : class
+        {
+            // TODO: how to avoid SQL injection?
+            commandText = string.Format(commandText, parameters);
+            return this.context.CreateSQLQuery(commandText).AddEntity(typeof(T)).List<T>().AsEnumerable();
         }
 
         /// <summary>

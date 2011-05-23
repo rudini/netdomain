@@ -20,6 +20,7 @@ namespace netdomain.LinqToEntities.Test
 {
     using System.Collections.Generic;
     using System.Configuration;
+    using System.Data.Objects;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Transactions;
@@ -268,6 +269,26 @@ namespace netdomain.LinqToEntities.Test
                 this.Testee.SubmitChanges();
 
                 var count = this.Testee.CreateQuery<PersonPoco>().Where(p => p.Name == name).Count();
+
+                Assert.AreEqual(1, count, string.Format("The count of persons must be {0}.", 1));
+            }
+        }
+
+        [Test]
+        public void CreateQueryFromStoreModel()
+        {
+            var name = "Testname";
+            var profession = "TestProfession";
+            var address = "TestAddress";
+
+            using (new TransactionScope())
+            {
+                var newPerson = this.CreateANewEntity(name, profession, address);
+                this.Testee.SubmitChanges();
+
+                const string Query = "SELECT * FROM Person WHERE Person.Name = {0}";
+
+                var count = this.Testee.CreateSqlQuery<PersonPoco>(Query, name).Count();
 
                 Assert.AreEqual(1, count, string.Format("The count of persons must be {0}.", 1));
             }
