@@ -51,6 +51,15 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
         /// <summary>
         /// Gets the session.
         /// </summary>
+        /// <returns>The configured session</returns>
+        public IStatelessSession GetStatelessSession()
+        {
+            return sessionFactory.OpenStatelessSession();
+        }
+
+        /// <summary>
+        /// Gets the session.
+        /// </summary>
         /// <param name="entityMode">The entity mode.</param>
         /// <returns>The configured session</returns>
         public ISession GetSession(EntityMode entityMode)

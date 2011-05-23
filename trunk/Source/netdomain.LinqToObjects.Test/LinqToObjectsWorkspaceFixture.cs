@@ -209,6 +209,12 @@ namespace netdomain.LinqToObjects.Test
         }
 
         [Test]
+        public void CreateQueryFromStoreModel()
+        {
+            // Not supported by InMemoryContext
+        }
+
+        [Test]
         public void GetByKey()
         {
             // Not supported by InMemoryContext

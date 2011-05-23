@@ -89,6 +89,19 @@ namespace netdomain.LinqToObjects
         }
 
         /// <summary>
+        /// Execute the sequence returning query against the database server.
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="T">The element type of the result sequence.</typeparam> 
+        /// <param name="commandText">The query specified in the server's native query language.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param> 
+        /// <returns>An IEnumerable sequence of objects.</returns> 
+        public virtual IEnumerable<T> CreateSqlQuery<T>(string commandText, params object[] parameters) where T : class
+        {
+            throw new NotSupportedException("Create native sql query is not supported by the InMemoryUnitOfWork");
+        }
+
+        /// <summary>
         /// Persists all pending updates to the data source.
         /// </summary>
         public void SubmitChanges()
@@ -127,7 +140,7 @@ namespace netdomain.LinqToObjects
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="entityWithKey">an entity with a key</param>
         /// <returns>a persistent instance or null</returns>
-        public T Get<T>(T entityWithKey) where T : class
+        public virtual T Get<T>(T entityWithKey) where T : class
         {
             throw new NotSupportedException("The method Get is not supported by the InMemoryUnitOfWork");
         }
@@ -186,7 +199,7 @@ namespace netdomain.LinqToObjects
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity to be refreshed.</param>
-        public void Refresh<T>(T entity) where T : class
+        public virtual void Refresh<T>(T entity) where T : class
         {
             throw new NotSupportedException("The method Refresh is not supported by the InMemoryUnitOfWork");
         }
