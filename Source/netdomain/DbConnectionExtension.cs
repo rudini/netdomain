@@ -73,7 +73,7 @@ namespace netdomain
 
             lock (((ICollection)delegateCache).SyncRoot)
             {
-                delegateCache.TryGetValue(typeof (TResult), out del);
+                delegateCache.TryGetValue(typeof(TResult), out del);
             }
 
             var connected = ManageConnection(manager);
