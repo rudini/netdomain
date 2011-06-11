@@ -256,7 +256,8 @@ namespace netdomain.LinqToSql.Test.BusinessObjects
         /// Validates this instance and all aggregated entities and returns the validation results.
         /// </summary>
         /// <param name="results">The validation results as <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</param>
-        public void Validate(ValidationResult results)
+        /// <param name="context"></param>
+        public void Validate(ValidationResult results, object context = null)
         {
             // context based validation
         }

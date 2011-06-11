@@ -36,7 +36,8 @@ namespace netdomain.Abstract
         /// Validates this instance and all aggregated entities and returns the validation results.
         /// </summary>
         /// <param name="result">The validation results as <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</param>
-        void Validate(TValidationResult result);
+        /// <param name="context">The context.</param>
+        void Validate(TValidationResult result, object context = null);
 
         /// <summary>
         /// Validates this instance and all aggregated entities regarding persistence validation rules and returns the validation results.
