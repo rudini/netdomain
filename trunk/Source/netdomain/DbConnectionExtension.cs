@@ -146,17 +146,17 @@ namespace netdomain
         /// <summary>
         /// Replaces the specified objects.
         /// </summary>
-        /// <typeparam name="T">typ T</typeparam>
-        /// <param name="objects">The objects.</param>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <param name="items">The items of the array.</param>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="value">The value.</param>
-        public static void Replace<T>(this T[] objects, Predicate<T> predicate, T value)
+        /// <param name="value">The value to replace.</param>
+        public static void Replace<T>(this T[] items, Predicate<T> predicate, T value)
         {
-            for (var i = 0; i < objects.Length - 1; i++)
+            for (var i = 0; i < items.Length - 1; i++)
             {
-                if (predicate(objects[i]))
+                if (predicate(items[i]))
                 {
-                    objects[i] = value;
+                    items[i] = value;
                 }
             }
         }
