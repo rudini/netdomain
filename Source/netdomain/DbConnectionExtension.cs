@@ -91,10 +91,11 @@ namespace netdomain
 
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
-                        var par = Expression.Parameter(reader.GetValue(i).GetType(), "p");
+                        //var par = Expression.Parameter(reader.GetValue(i).GetType(), "p");
+                        var par = Expression.Parameter(typeof(TResult).GetProperty(reader.GetName(i)).PropertyType, "p");
 
-                        MemberInfo parMember =
-                            typeof(TResult).GetMember(reader.GetName(i))[0];
+                        PropertyInfo parMember =
+                            typeof(TResult).GetProperty(reader.GetName(i));
 
                         MemberBinding parMemberBinding = Expression.Bind(
                             parMember,
@@ -116,6 +117,7 @@ namespace netdomain
                 }
 
                 reader.GetValues(values);
+                values.Replace(o => o.GetType() == typeof(DBNull), null);
 
                 yield return (TResult)del.DynamicInvoke(values);
             }
@@ -139,6 +141,24 @@ namespace netdomain
         {
             IDbCommand command = PrepareCommand(manager.Connection, procedure, parameters);
             return ExecuteMethod<int>(command.ExecuteNonQuery, manager);
+        }
+
+        /// <summary>
+        /// Replaces the specified objects.
+        /// </summary>
+        /// <typeparam name="T">typ T</typeparam>
+        /// <param name="objects">The objects.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="value">The value.</param>
+        public static void Replace<T>(this T[] objects, Predicate<T> predicate, T value)
+        {
+            for (var i = 0; i < objects.Length - 1; i++)
+            {
+                if (predicate(objects[i]))
+                {
+                    objects[i] = value;
+                }
+            }
         }
 
         /// <summary>
