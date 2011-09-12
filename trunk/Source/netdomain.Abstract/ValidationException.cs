@@ -72,6 +72,7 @@ namespace netdomain.Abstract
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
+		[Obsolete("Do not use this constructor because of the uninitialized validationResults.")]
         public ValidationException(string message, Exception innerException)
             : base(message, innerException)
         {
