@@ -62,5 +62,14 @@ namespace netdomain.Contrib.Extensions
         {
             this.log.Error(exception.Message);
         }
+
+        /// <summary>
+        /// Called before a query is executing.
+        /// </summary>
+        /// <param name="query">The query as a string.</param>
+        public override void OnPreQueryExecuted(string query)
+        {
+            this.log.Debug(query);
+        }
     }
 }

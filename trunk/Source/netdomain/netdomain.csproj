@@ -66,6 +66,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -100,6 +101,7 @@
     <Compile Include="IdGenerator\IIdentifierGenerator.cs" />
     <Compile Include="Helpers\MappingHelper.cs" />
     <Compile Include="IdGenerator\IIdentifierGeneratorFactory.cs" />
+    <Compile Include="QueryLogger.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="SqlBulkCopyExtension.cs" />
     <Compile Include="WorkspaceBuilder.cs" />

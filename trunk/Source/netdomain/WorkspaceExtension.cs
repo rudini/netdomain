@@ -121,5 +121,13 @@ namespace netdomain
         public virtual void OnExceptionThrown(Exception exception)
         {
         }
+
+        /// <summary>
+        /// Called before a query is executing.
+        /// </summary>
+        /// <param name="query">The query as a string.</param>
+        public virtual void OnPreQueryExecuted(string query)
+        {
+        }
     }
 }

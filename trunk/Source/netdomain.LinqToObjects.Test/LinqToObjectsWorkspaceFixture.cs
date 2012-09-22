@@ -496,7 +496,14 @@ namespace netdomain.LinqToObjects.Test
             // not supported by the InMemoryUnitOfWork
         }
 
+        [Test]
         public void CallOnOptimisticOfflineLockExceptionThrownOnWorkspaceExtension()
+        {
+            // Not supported by InMemoryContext
+        }
+
+        [Test]
+        public void CallOnPreQueryExectuted()
         {
             // Not supported by InMemoryContext
         }

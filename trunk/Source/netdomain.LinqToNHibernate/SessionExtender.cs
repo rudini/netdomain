@@ -18,6 +18,7 @@
 
 namespace netdomain.LinqToNHibernate
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using netdomain.Abstract;
@@ -39,6 +40,7 @@ namespace netdomain.LinqToNHibernate
         /// <param name="context">The context.</param>
         /// <param name="state">The state.</param>
         /// <returns>An <see cref="T:System.Collections.IEnumerable"/>.</returns>
+        [Obsolete("Do not use this method anymore. Use the EventListener mechanism of the SessionFactory configuration.")]
         internal static IEnumerable<object> GetEntitiesFromActionQueues(this ISession context, TrackingState state)
         {
             var sessionImpl = (SessionImpl)context;
@@ -74,8 +76,7 @@ namespace netdomain.LinqToNHibernate
 
             actionQueue.ClearFromFlushNeededCheck(collectionRemovalsCount);
 
-            return changedEntities.
-                Where(
+            return changedEntities.Where(
                 entity =>
                 entity != null);
         }

@@ -68,6 +68,7 @@ namespace netdomain.LinqToSql
             }
 
             this.context = context;
+            this.context.Log = new QueryLogger(this.extensions);
             WorkspaceBuilder.Current.GetExtensionInstances().ToList().ForEach(ex => { ex.Workspace = this; this.extensions.Add(ex); });
         }
 

@@ -43,12 +43,12 @@ namespace netdomain
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="manager">The manager.</param>
-        /// <param name="procedure">The procedure.</param>
+        /// <param name="text">The command text e.g. the name of the store procedure or sql query.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns>The first column of the first row in the resultset.</returns>
-        public static TResult ExecuteScalar<TResult>(this IConnectionManager manager, string procedure, params Parameter[] parameters)
+        public static TResult ExecuteScalar<TResult>(this IConnectionManager manager, string text, params Parameter[] parameters)
         {
-            IDbCommand command = PrepareCommand(manager.Connection, procedure, parameters);
+            IDbCommand command = PrepareCommand(manager.Connection, text, parameters);
             return (TResult)ExecuteMethod<object>(command.ExecuteScalar, manager);
         }
 
@@ -62,12 +62,12 @@ namespace netdomain
         /// Do use the mapping features of your O/R framwork instead!</remarks>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="manager">The connection manager.</param>
-        /// <param name="procedure">The procedure.</param>
+        /// <param name="text">The command text e.g. the name of the store procedure or sql query.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns>An enumerable of a generic type.</returns>
-        public static IEnumerable<TResult> Execute<TResult>(this IConnectionManager manager, string procedure, params Parameter[] parameters)
+        public static IEnumerable<TResult> Execute<TResult>(this IConnectionManager manager, string text, params Parameter[] parameters)
         {
-            IDbCommand command = PrepareCommand(manager.Connection, procedure, parameters);
+            IDbCommand command = PrepareCommand(manager.Connection, text, parameters);
 
             Delegate del;
 
@@ -131,15 +131,15 @@ namespace netdomain
         /// data provider, and returns the number of rows affected.
         /// </summary>
         /// <param name="manager">The connection manager.</param>
-        /// <param name="procedure">The procedure.</param>
+        /// <param name="text">The command text e.g. the name of the store procedure or sql query.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns>The number of rows affected.</returns>
         /// <exception cref="System.InvalidOperationException">
         /// The connection does not exist.  -or- The connection is not open.
         /// </exception>
-        public static int ExecuteNonQuery(this IConnectionManager manager, string procedure, params Parameter[] parameters)
+        public static int ExecuteNonQuery(this IConnectionManager manager, string text, params Parameter[] parameters)
         {
-            IDbCommand command = PrepareCommand(manager.Connection, procedure, parameters);
+            IDbCommand command = PrepareCommand(manager.Connection, text, parameters);
             return ExecuteMethod<int>(command.ExecuteNonQuery, manager);
         }
 
@@ -165,14 +165,14 @@ namespace netdomain
         /// Prepares the stored procedure command.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        /// <param name="procedure">The procedure.</param>
+        /// <param name="text">The command text e.g. the name of the store procedure or sql query.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns>A command object of type <see cref="T:System.Data.IDbCommand"/></returns>
-        private static IDbCommand PrepareCommand(IDbConnection connection, string procedure, IEnumerable<Parameter> parameters)
+        private static IDbCommand PrepareCommand(IDbConnection connection, string text, IEnumerable<Parameter> parameters)
         {
             IDbCommand command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = procedure;
+            //command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = text;
 
             foreach (var param in parameters)
             {

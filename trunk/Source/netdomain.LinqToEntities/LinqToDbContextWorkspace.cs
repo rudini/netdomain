@@ -66,6 +66,8 @@ namespace netdomain.LinqToEntities
         /// </summary>
         private Action releaseConnectionDelegate;
 
+        private QueryLogger queryLogger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LinqToDbContextWorkspace"/> class.
         /// </summary>
@@ -82,6 +84,7 @@ namespace netdomain.LinqToEntities
             this.objectContext.ObjectStateManager.ObjectStateManagerChanged += this.OnObjectStateManagerChanged;
 
             WorkspaceBuilder.Current.GetExtensionInstances().ToList().ForEach(ex => { ex.Workspace = this; this.extensions.Add(ex); });
+            this.queryLogger = new QueryLogger(this.extensions);
         }
 
         /// <summary>
@@ -288,7 +291,7 @@ namespace netdomain.LinqToEntities
         public bool IsDirty()
         {
             return this.objectContext.ObjectStateManager.GetObjectStateEntries(
-                EntityState.Added | EntityState.Modified | EntityState.Deleted).Count() > 0;
+                EntityState.Added | EntityState.Modified | EntityState.Deleted).Any();
         }
 
         /// <summary>
@@ -347,7 +350,7 @@ namespace netdomain.LinqToEntities
         /// <returns>An <see cref="T:netdomain.Abstract.IQueryableContext`1"/> of the specified type.</returns>
         public IQueryableContext<T> CreateQuery<T>() where T : class
         {
-            return new LinqToEntitiesQueryableContext<T>(this.objectContext);
+            return new LinqToEntitiesQueryableContext<T>(this.objectContext, this.queryLogger);
         }
 
         /// <summary>

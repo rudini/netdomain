@@ -99,5 +99,11 @@ namespace netdomain.Abstract
         /// </summary>
         /// <param name="exception">The exception.</param>
         void OnExceptionThrown(Exception exception);
+
+        /// <summary>
+        /// Called before a query is executing.
+        /// </summary>
+        /// <param name="query">The query as a string.</param>
+        void OnPreQueryExecuted(string query);
     }
 }
