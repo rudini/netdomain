@@ -37,12 +37,19 @@ namespace netdomain.LinqToEntities
         private ObjectQuery<T> objectQuery;
 
         /// <summary>
+        /// The query provider.
+        /// </summary>
+        private EFQueryProvider queryProvider;
+        
+        /// <summary>
         /// Initializes a new instance of the <see cref="T:netdomain.LinqToEntities.LinqToEntitiesQueryableContext`1"/> class.
         /// </summary>
         /// <param name="objectContext">The object context.</param>
-        internal LinqToEntitiesQueryableContext(ObjectContext objectContext)
+        /// <param name="queryLogger">The query logger.</param>
+        internal LinqToEntitiesQueryableContext(ObjectContext objectContext, QueryLogger queryLogger)
         {
             this.objectQuery = objectContext.CreateQuery<T>(objectContext.GetEntitySetName<T>());
+            this.queryProvider = new EFQueryProvider(this.objectQuery.AsQueryable().Provider, queryLogger);
         }
 
         #region IQueryable Members
@@ -74,7 +81,7 @@ namespace netdomain.LinqToEntities
         /// <returns>The <see cref="T:System.Linq.IQueryProvider"/> that is associated with this data source.</returns>
         public IQueryProvider Provider
         {
-            get { return this.objectQuery.AsQueryable().Provider; }
+            get { return this.queryProvider; }
         }
 
         #endregion

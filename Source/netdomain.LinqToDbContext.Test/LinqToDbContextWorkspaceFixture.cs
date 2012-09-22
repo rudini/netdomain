@@ -18,6 +18,7 @@
 
 namespace netdomain.LinqToEntities.Test
 {
+    using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.SqlClient;
@@ -781,6 +782,27 @@ namespace netdomain.LinqToEntities.Test
 
             // Assert
             this.ExtensionMock.Verify(e => e.OnOptimisticOfflineLockExceptionThrown(exception));
+        }
+
+        [Test]
+        public void CallOnPreQueryExectuted()
+        {
+            // Arrange
+            var name = "Testname";
+            var profession = "TestProfession";
+            var address = "TestAddress";
+
+            using (new TransactionScope())
+            {
+                // Act
+                var newPerson = this.CreateANewEntity(name, profession, address);
+                this.Testee.SubmitChanges();
+
+                var count = this.Testee.CreateQuery<Person>().Select(p => p.Name == name).Count();
+
+                // Assert
+                this.ExtensionMock.Verify(e => e.OnPreQueryExecuted(It.IsAny<string>()));
+            }
         }
 
         #endregion

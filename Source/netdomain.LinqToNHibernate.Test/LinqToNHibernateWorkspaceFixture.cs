@@ -761,6 +761,27 @@ namespace netdomain.LinqToNHibernate.Test
             this.ExtensionMock.Verify(e => e.OnOptimisticOfflineLockExceptionThrown(exception));
         }
 
+        [Test]
+        public void CallOnPreQueryExectuted()
+        {
+            // Arrange
+            var name = "Testname";
+            var profession = "TestProfession";
+            var address = "TestAddress";
+
+            using (new TransactionScope())
+            {
+                // Act
+                var newPerson = this.CreateANewEntity(name, profession, address);
+                this.Testee.SubmitChanges();
+
+                var count = this.Testee.CreateQuery<Person>().Where(p => p.Name == name).Count();
+
+                // Assert
+                this.ExtensionMock.Verify(e => e.OnPreQueryExecuted(It.IsAny<string>()));
+            }
+        }
+
         #endregion
 
         #region test helper methods

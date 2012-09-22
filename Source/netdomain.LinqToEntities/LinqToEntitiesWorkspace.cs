@@ -43,7 +43,7 @@ namespace netdomain.LinqToEntities
         /// <summary>
         /// The extension registered to the workspace.
         /// </summary>
-        private readonly List<IWorkspaceExtension> extensions = new List<IWorkspaceExtension>();
+        private List<IWorkspaceExtension> extensions = new List<IWorkspaceExtension>();
 
         /// <summary>
         /// Holds the delegate to the ClearCache method on the <see cref="T:netdomain.LinqToEntities.ObjectContextExtender"/>
@@ -61,6 +61,11 @@ namespace netdomain.LinqToEntities
         private Action releaseConnectionDelegate;
 
         /// <summary>
+        /// The query logger.
+        /// </summary>
+        private readonly QueryLogger queryLogger;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LinqToEntitiesWorkspace"/> class.
         /// </summary>
         /// <param name="objectContext">The object context.</param>
@@ -75,6 +80,7 @@ namespace netdomain.LinqToEntities
             this.context.ObjectStateManager.ObjectStateManagerChanged += this.OnObjectStateManagerChanged;
 
             WorkspaceBuilder.Current.GetExtensionInstances().ToList().ForEach(ex => { ex.Workspace = this; this.extensions.Add(ex); });
+            this.queryLogger = new QueryLogger(this.extensions);
         }
 
         /// <summary>
@@ -298,7 +304,7 @@ namespace netdomain.LinqToEntities
         public bool IsDirty()
         {
             return this.context.ObjectStateManager.GetObjectStateEntries(
-                EntityState.Added | EntityState.Modified | EntityState.Deleted).Count() > 0;
+                EntityState.Added | EntityState.Modified | EntityState.Deleted).Any();
         }
 
         /// <summary>
@@ -362,7 +368,7 @@ namespace netdomain.LinqToEntities
         /// <returns>An <see cref="T:netdomain.Abstract.IQueryableContext`1"/> of the specified type.</returns>
         public IQueryableContext<T> CreateQuery<T>() where T : class
         {
-            return new LinqToEntitiesQueryableContext<T>(this.context);
+            return new LinqToEntitiesQueryableContext<T>(this.context, this.queryLogger);
         }
 
         /// <summary>
@@ -384,6 +390,13 @@ namespace netdomain.LinqToEntities
         /// </summary>
         public void Dispose()
         {
+            this.clearCacheDelegate = null;
+            this.releaseConnectionDelegate = null;
+            this.ensureConnectionDelegate = null;
+
+            this.extensions.Clear();
+            this.extensions = null;
+
             this.context.Dispose();
         }
 

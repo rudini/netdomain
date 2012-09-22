@@ -18,6 +18,8 @@
 
 namespace netdomain.LinqToNHibernate.Test.BusinessObjects
 {
+    using System.Linq;
+
     using NHibernate;
     using NHibernate.Cfg;
 
@@ -45,7 +47,7 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
         /// <returns>The configured session</returns>
         public ISession GetSession()
         {
-            return sessionFactory.OpenSession().GetSession(EntityMode.Poco);
+            return this.GetSession(EntityMode.Poco);
         }
 
         /// <summary>
@@ -64,7 +66,10 @@ namespace netdomain.LinqToNHibernate.Test.BusinessObjects
         /// <returns>The configured session</returns>
         public ISession GetSession(EntityMode entityMode)
         {
-            return sessionFactory.OpenSession().GetSession(entityMode);
+            return sessionFactory.OpenSession(
+                new QueryLoggerProvider(
+                    new QueryLogger(WorkspaceBuilder.Current.GetExtensionInstances().ToList())))
+            .GetSession(entityMode);
         }
         
         /// <summary>
