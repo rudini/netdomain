@@ -1,0 +1,100 @@
+# Enable and simplifies TDD #
+
+For unit testing purposes, it’s not necessary to test the underlying persistence framework. We just want to test the repository. So you just have to mock the IWorkspace.
+
+## Using the InMemoryQueryableContext ##
+
+To simulate persistent data, you can add Entities to an InMemoryQueryableContext as you can see in the following code snippet (NMock2).
+
+```
+[TestMethod]
+public void GetBySpecification()
+{
+    // Arrange
+    var workspace = Mockery.NewMock<IWorkspace>();
+    var testee = new MediumRepository(workspace);
+    
+    var title = "Testtitle";
+    var spec = new Specification<Medium>(m => m.Title == title);
+
+    var medium = new Medium { Title = title };
+
+    InMemoryQueryableContext<Medium> queryableType = new InMemoryQueryableContext<Medium>();
+    queryableType.Insert(medium);
+
+    Expect.Once.On(workspace).Method("CreateQuery", typeof(Medium)).Will(Return.Value(queryableType));
+    
+    // Act        
+    var fetchedMedium = testee.FindBySpecification(spec).First();
+
+    // Assert
+    Assert.AreEqual(medium, fetchedMedium);
+}
+```
+
+## Using the InMemoryWorkspace ##
+
+The InMemoryWorkspace can be used as a replacement of a real persistence framework workspace. Because the data is hold in memory, there is neither support for transactions nor can you rollback changed data (this is the case when no SubmitChanges() is called).
+
+```
+[TestMethod]
+public void GetBySpecification()
+{
+    // Arrange
+    var workspace = new InMemoryWorkspace>();
+    var testee = new MediumRepository(workspace);
+    
+    var title = "Testtitle";
+    var spec = new Specification<Medium>(m => m.Title == title);
+
+    var medium = new Medium { Title = title };
+    workspace.Add(medium);
+    workspace.SubmitChanges();
+    
+    // Act
+    var fetchedMedium = testee.FindBySpecification(spec).First();
+
+    // Assert
+    Assert.AreEqual(medium, fetchedMedium);
+}
+```
+
+## How to test calls to the wrapped instance ##
+
+There are situations in which you want to call methods on the wrapped instance e.g.
+
+```
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JobArchiveQueryService"/> class.
+    /// </summary>
+    /// <param name="workspace">The workspace.</param>
+    public JobArchiveQueryService(IWorkspace workspace)
+    {
+        this.workspace = workspace;
+        ((IWorkspace<DataContext>)this.workspace).WrappedInstance.ObjectTrackingEnabled = false;
+    }
+```
+
+To mock the calls on a DataContext you have to simply mock the `IWorkspace<DataContext>`.
+
+```
+    // Arrange
+    var inMemoryWorkspace = new InMemoryWorkspace();
+    var workspaceMock = new Mock<IWorkspace<DataContext>>();
+    workspaceMock.Setup(wsm => wsm.WrappedInstance).Returns(new DataContext("TestConnectionString"));
+    this.workspaceMock.Setup(wsm => wsm.CreateQuery<JobData>()).Returns(
+         this.inMemoryWorkspace.CreateQuery<JobData>);
+    var testee = new JobArchiveQueryService(this.workspaceMock.Object);
+    
+    // adding testdata to workspace omitted
+
+    // Act
+    var result = this.testee.GetArchivedJobs();
+
+    // Assert
+    Assert.AreEqual(1, result.RowCount, "The row count must be {0}", 1);
+    Assert.AreEqual("Testname1", result.Results[0].Jobname, "The name of the job must be {0}", "Testname1");
+```
+
+| Remark: Not all LINQ Queries are supported by all persistence Frameworks. |
+|:--------------------------------------------------------------------------|

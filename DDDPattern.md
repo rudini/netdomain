@@ -1,0 +1,34 @@
+# DDD Patterns #
+
+This page does not provide the theory behind DDD patterns but rather how to implement such patterns using the netdomain framework.
+
+# Repository pattern #
+
+The concept is to let your Repositories only talk to the Workspace abstraction. For common repository functions, a base class is implemented.
+
+The following sample shows, how to create a Repository class in your code.
+Your class must only derive from the Repository base class of a specific type (the aggregate root type).
+The Repository gets the IWorkspace in its constructor.
+
+```
+public class PersonRepository : Repository<Person>
+{
+    public PersonRepository(IWorkspace context)
+        : base(context)
+    { }
+}
+```
+
+# Specifications #
+
+  * Encapsulates the criteria in a Specification instance used as a variant of the query object pattern or for business rules implementation
+  * The criterion could use another query (AND, OR) or can be negated (NOT)
+  * Used by the Repository to query for objects.
+
+```
+var specification = new Specification<Person>(p => p.Name == name);
+var andSpecification = new Specification<Person>(p => p.Beruf == beruf);
+var spec = specification.And(andSpecification);
+IEnumerable<Person> person = repository.FindBySpecification(spec);
+
+```

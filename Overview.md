@@ -1,0 +1,18 @@
+# Introduction #
+
+netdomain supports developer in creating flexible data access layers according to Domain-Driven Design pattern.
+
+The main features of netdomain are:
+  * Simplifies the using of persistence frameworks (ORM)
+  * Enables and simplifies Test Driven Development
+  * Supports LINQ to SQL, ADO .Net Entity Framework 4.0 and NHibernate
+  * Expandable by any data source supporting Linq
+  * Enhances missing functionalities to LINQ to SQL and Entity Framework
+  * Supports high performance mass data processing
+
+# Simplifies the using of persistence frameworks (ORM) #
+
+The business logic just works against an interfaced called IWorkspace for fetching, deleting and updating entities. LINQ is the common language for querying data.
+The persistence framework you use doesn't matter any longer.
+
+![https://netdomain.googlecode.com/svn/wiki/Overview.png](https://netdomain.googlecode.com/svn/wiki/Overview.png)

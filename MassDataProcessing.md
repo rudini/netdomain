@@ -1,0 +1,28 @@
+# Mass data update processing #
+
+The .Net Framework contains a class named SqlBulkCopy to insert data very fast.
+netdomain provide you an extension method, that enhances the SqlBulkCopy class  to use a IEnumberable as the data to store to a database.
+
+The usage is straightforward:
+
+```
+using netdomain;
+```
+
+```
+var logMessageList = new List<LogMessage>();
+
+// prepare data
+for (int i = 0; i < 100000; i++)
+{
+  logMessageList.Add(new LogMessage { Id = i.ToString(), Message = "Test" + i.ToString() });
+}
+
+var sqlBulkCopy = new SqlBulkCopy(@"Data Source=(local);Initial Catalog=TEST;Integrated Security=True") { BatchSize = 10000000, DestinationTableName = "Messages" };
+// create the mapping
+sqlBulkCopy.ColumnMappings.Add("Message", "Message");
+sqlBulkCopy.ColumnMappings.Add("Id", "Id");
+
+// write to the server
+sqlBulkCopy.WriteToServer(logMessageList);
+```
